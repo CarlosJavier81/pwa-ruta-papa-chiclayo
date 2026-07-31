@@ -1,0 +1,27 @@
+{
+  "name": "Ruta del Papa - Chiclayo",
+  "short_name": "Ruta del Papa",
+  "description": "Guía interactiva de la ruta del Papa en Chiclayo: mapa, directorio de servicios y guía para asistentes a la misa.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1D3557",
+  "theme_color": "#1D3557",
+  "lang": "es",
+  "categories": ["travel", "navigation", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
