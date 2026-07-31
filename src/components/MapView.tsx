@@ -70,6 +70,7 @@ export default function MapView() {
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
+    // 1. Inicialización del mapa
     const map = L.map(containerRef.current, {
       center: [-6.77, -79.84],
       zoom: 10,
@@ -78,11 +79,13 @@ export default function MapView() {
     });
     mapRef.current = map;
 
+    // 2. Capa base OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap',
       maxZoom: 19,
     }).addTo(map);
 
+    // 3. Renderizado de marcadores
     markersRef.current = data.features.map((f) => {
       const [lng, lat] = f.geometry.coordinates;
       const cat = categoryFromStyle(f.properties.styleUrl);
@@ -98,17 +101,30 @@ export default function MapView() {
       return { marker: m, category: cat };
     });
 
-    const bounds = L.latLngBounds(data.features.map((f) => [f.geometry.coordinates[1], f.geometry.coordinates[0]] as [number, number]));
-    map.fitBounds(bounds, { padding: [40, 40] });
+    // 4. Centrado de límites iniciales
+    if (data.features.length > 0) {
+      const bounds = L.latLngBounds(data.features.map((f) => [f.geometry.coordinates[1], f.geometry.coordinates[0]] as [number, number]));
+      map.fitBounds(bounds, { padding: [40, 40] });
+    }
 
-    setTimeout(() => map.invalidateSize(), 200);
+    // 💡 FIX DEFINITIVO PARA SAFARI / IPHONE:
+    // Aumentamos a 400ms y usamos requestAnimationFrame para obligar a Leaflet a recalcular el canvas
+    const timer = setTimeout(() => {
+      requestAnimationFrame(() => {
+        if (mapRef.current) {
+          mapRef.current.invalidateSize();
+        }
+      });
+    }, 400);
 
     return () => {
+      clearTimeout(timer);
       map.remove();
       mapRef.current = null;
     };
   }, []);
 
+  // Manejo de filtros activos
   useEffect(() => {
     if (!mapRef.current) return;
     const active = activeCats;
@@ -131,7 +147,7 @@ export default function MapView() {
   };
 
   const recenter = () => {
-    if (!mapRef.current) return;
+    if (!mapRef.current || data.features.length === 0) return;
     const bounds = L.latLngBounds(data.features.map((f) => [f.geometry.coordinates[1], f.geometry.coordinates[0]] as [number, number]));
     mapRef.current.fitBounds(bounds, { padding: [40, 40] });
   };
