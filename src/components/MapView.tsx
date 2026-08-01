@@ -107,8 +107,7 @@ export default function MapView() {
       map.fitBounds(bounds, { padding: [40, 40] });
     }
 
-    // 💡 FIX DEFINITIVO PARA SAFARI / IPHONE:
-    // Aumentamos a 400ms y usamos requestAnimationFrame para obligar a Leaflet a recalcular el canvas
+    // Fix para recalcular dimensiones del canvas en iOS
     const timer = setTimeout(() => {
       requestAnimationFrame(() => {
         if (mapRef.current) {
@@ -156,38 +155,39 @@ export default function MapView() {
     <div className="relative h-full w-full">
       <div ref={containerRef} className="absolute inset-0 z-0" />
 
-      {/* Header */}
-      <div className="absolute top-0 inset-x-0 z-[500] bg-navy-500 text-white px-4 pt-3 pb-3 shadow-card">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="font-display font-bold text-lg leading-tight">Mapa de la Ruta</h1>
-            <p className="text-xs text-navy-100">Chiclayo - Visita Papal</p>
-          </div>
-          <button
-            onClick={() => setShowLegend((s) => !s)}
-            className="flex items-center gap-1.5 bg-gold-500 text-navy-600 px-3 py-1.5 rounded-full text-xs font-semibold shadow-card active:scale-95 transition"
-          >
-            <span className="text-sm leading-none">☰</span> Filtros
-          </button>
+      {/* Header Limpio (Con espacio seguro para la barra superior de iPhone) */}
+      <div className="absolute top-0 inset-x-0 z-[500] bg-navy-500 text-white px-4 pt-5 pb-3 shadow-card">
+        <div>
+          <h1 className="font-display font-bold text-lg leading-tight">Mapa de la Ruta</h1>
+          <p className="text-xs text-navy-100">Chiclayo - Visita Papal</p>
         </div>
       </div>
 
-      {/* Legend / Filter panel */}
+      {/* Pop-up flotante de Filtros (Aparece justo sobre los botones de acción) */}
       {showLegend && (
-        <div className="absolute top-[72px] inset-x-0 z-[500] bg-white px-4 py-3 shadow-card border-t border-navy-100">
-          <div className="grid grid-cols-2 gap-2">
+        <div className="absolute bottom-36 right-4 z-[500] bg-white p-3.5 rounded-2xl shadow-xl border border-navy-100 max-w-[230px]">
+          <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-gray-100">
+            <span className="text-xs font-bold text-navy-600 uppercase tracking-wider">Filtrar Puntos</span>
+            <button 
+              onClick={() => setShowLegend(false)}
+              className="text-gray-400 hover:text-gray-600 text-xs font-bold px-1"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="flex flex-col gap-2">
             {(Object.entries(categoryConfig) as [MapPointCategory, { label: string; color: string }][]).map(([key, cfg]) => {
               const on = activeCats.has(key);
               return (
                 <button
                   key={key}
                   onClick={() => toggle(key)}
-                  className={`flex items-center gap-2 px-2.5 py-2 rounded-lg border text-xs font-medium transition ${
-                    on ? 'border-navy-500 bg-navy-50 text-navy-600' : 'border-gray-200 bg-gray-50 text-gray-400'
+                  className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition ${
+                    on ? 'border-navy-500 bg-navy-50 text-navy-600' : 'border-gray-200 bg-gray-50 text-gray-400 opacity-60'
                   }`}
                 >
-                  <span className="w-3 h-3 rounded-full border border-white shadow-sm" style={{ background: cfg.color }} />
-                  {cfg.label}
+                  <span className="w-3 h-3 rounded-full border border-white shadow-sm flex-shrink-0" style={{ background: cfg.color }} />
+                  <span className="truncate">{cfg.label}</span>
                 </button>
               );
             })}
@@ -195,14 +195,30 @@ export default function MapView() {
         </div>
       )}
 
-      {/* Recenter button */}
-      <button
-        onClick={recenter}
-        className="absolute bottom-24 right-4 z-[500] bg-white text-navy-500 w-11 h-11 rounded-full shadow-card flex items-center justify-center active:scale-95 transition"
-        aria-label="Ver toda la ruta"
-      >
-        <span className="text-xl leading-none">⊙</span>
-      </button>
+      {/* Contenedor de Botones Flotantes (Inferior Derecho) */}
+      <div className="absolute bottom-20 right-4 z-[500] flex flex-col gap-2.5 items-end">
+        {/* Botón Filtros (Encima del botón recentrar) */}
+        <button
+          onClick={() => setShowLegend((s) => !s)}
+          className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-full shadow-card active:scale-95 transition text-xs font-bold ${
+            showLegend 
+              ? 'bg-navy-500 text-white' 
+              : 'bg-gold-500 text-navy-600'
+          }`}
+          aria-label="Abrir Filtros"
+        >
+          <span className="text-sm leading-none">☰</span> Filtros
+        </button>
+
+        {/* Botón Recentrar Mapa (Círculo) */}
+        <button
+          onClick={recenter}
+          className="bg-white text-navy-500 w-11 h-11 rounded-full shadow-card flex items-center justify-center active:scale-95 transition border border-gray-100"
+          aria-label="Ver toda la ruta"
+        >
+          <span className="text-xl leading-none">⊙</span>
+        </button>
+      </div>
     </div>
   );
 }
