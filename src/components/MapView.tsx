@@ -68,14 +68,29 @@ function makeIcon(color: string, emoji: string) {
   });
 }
 
+// Icono animado para la ubicación en vivo del usuario
+function makeUserIcon() {
+  return L.divIcon({
+    className: 'user-location-marker',
+    html: `<div style="position:relative;width:24px;height:24px;">
+      <div style="position:absolute;inset:0;background:#2563EB;border-radius:50%;opacity:0.3;animation:ping 1.5s cubic-bezier(0,0,0.2,1) infinite;"></div>
+      <div style="position:absolute;inset:3px;background:#2563EB;border:3px solid #fff;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.4);"></div>
+    </div>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+  });
+}
+
 export default function MapView() {
   const mapRef = useRef<L.Map | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<MarkerData[]>([]);
-  
+  const userMarkerRef = useRef<L.Marker | null>(null);
+
   const [activeCats, setActiveCats] = useState<Set<MapPointCategory>>(new Set(Object.keys(categoryConfig) as MapPointCategory[]));
   const [expandedCat, setExpandedCat] = useState<MapPointCategory | null>(null);
   const [showLegend, setShowLegend] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -93,13 +108,13 @@ export default function MapView() {
       maxZoom: 19,
     }).addTo(map);
 
-    // Mapeo y registro de marcadores
+    // Mapeo de puntos GeoJSON
     markersRef.current = data.features.map((f, idx) => {
       const [lng, lat] = f.geometry.coordinates;
       const cat = categoryFromStyle(f.properties.styleUrl);
       const cfg = categoryConfig[cat];
       const m = L.marker([lat, lng], { icon: makeIcon(cfg.color, cfg.emoji) }).addTo(map);
-      
+
       m.bindPopup(
         `<div style="font-family:Inter,sans-serif;min-width:200px;max-width:260px;">
           <div style="font-weight:700;color:#1D3557;font-size:14px;margin-bottom:4px;">${f.properties.name}</div>
@@ -113,7 +128,7 @@ export default function MapView() {
         name: f.properties.name,
         category: cat,
         coordinates: [lat, lng],
-        marker: m
+        marker: m,
       };
     });
 
@@ -137,7 +152,7 @@ export default function MapView() {
     };
   }, []);
 
-  // Filtrado dinámico según categorías activas
+  // Filtrado de capas por categoría
   useEffect(() => {
     if (!mapRef.current) return;
     const active = activeCats;
@@ -169,21 +184,67 @@ export default function MapView() {
     setExpandedCat((prev) => (prev === c ? null : c));
   };
 
-  // Función para enfocar un punto específico desde el menú
   const selectPoint = (item: MarkerData) => {
     if (!mapRef.current) return;
-    
-    // Asegurarse que la categoría esté visible
+
     if (!activeCats.has(item.category)) {
       setActiveCats((prev) => new Set(prev).add(item.category));
     }
 
-    // Volar al punto en el mapa y abrir popup
-    mapRef.current.flyTo(item.coordinates, 15, { duration: 1.2 });
+    mapRef.current.flyTo(item.coordinates, 16, { duration: 1.2 });
     item.marker.openPopup();
-    
-    // Opcional: cerrar leyenda en pantallas pequeñas
     setShowLegend(false);
+  };
+
+  // Función para obtener la ubicación actual del usuario
+  const handleGetUserLocation = () => {
+    if (!navigator.geolocation) {
+      alert('Tu navegador no soporta geolocalización.');
+      return;
+    }
+
+    setIsLocating(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const { latitude, longitude } = position.coords;
+        const userLatLng: [number, number] = [latitude, longitude];
+
+        if (!mapRef.current) return;
+
+        // Si el marcador de usuario ya existe, solo actualiza la posición
+        if (userMarkerRef.current) {
+          userMarkerRef.current.setLatLng(userLatLng);
+        } else {
+          // Crear un nuevo marcador para el usuario
+          userMarkerRef.current = L.marker(userLatLng, {
+            icon: makeUserIcon(),
+            zIndexOffset: 1000, // Para que quede por encima de los otros pines
+          })
+            .addTo(mapRef.current)
+            .bindPopup(
+              `<div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1D3557;text-align:center;">
+                📍 Tu ubicación actual
+              </div>`
+            );
+        }
+
+        // Centrar suavemente en el usuario
+        mapRef.current.flyTo(userLatLng, 15, { duration: 1.2 });
+        userMarkerRef.current.openPopup();
+        setIsLocating(false);
+      },
+      (error) => {
+        setIsLocating(false);
+        console.error('Error al obtener ubicación:', error);
+        if (error.code === error.PERMISSION_DENIED) {
+          alert('Por favor permite el acceso a tu ubicación en tu navegador para ver tu posición en el mapa.');
+        } else {
+          alert('No pudimos obtener tu ubicación. Verifica tu señal GPS.');
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   };
 
   const recenter = () => {
@@ -206,13 +267,10 @@ export default function MapView() {
 
       {/* Panel Flotante de Filtros y Lista de Lugares */}
       {showLegend && (
-        <div className="absolute bottom-36 right-4 left-4 sm:left-auto z-[500] bg-white p-3.5 rounded-2xl shadow-xl border border-navy-100 sm:max-w-[280px] max-h-[60vh] flex flex-col">
+        <div className="absolute bottom-48 right-4 left-4 sm:left-auto z-[500] bg-white p-3.5 rounded-2xl shadow-xl border border-navy-100 sm:max-w-[280px] max-h-[55vh] flex flex-col">
           <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-gray-100 flex-shrink-0">
             <span className="text-xs font-bold text-navy-600 uppercase tracking-wider">Filtros y Puntos</span>
-            <button 
-              onClick={() => setShowLegend(false)}
-              className="text-gray-400 hover:text-gray-600 text-xs font-bold px-1"
-            >
+            <button onClick={() => setShowLegend(false)} className="text-gray-400 hover:text-gray-600 text-xs font-bold px-1">
               ✕
             </button>
           </div>
@@ -225,8 +283,7 @@ export default function MapView() {
 
               return (
                 <div key={key} className="flex flex-col rounded-lg border border-gray-200 overflow-hidden bg-white">
-                  {/* Encabezado Categoría */}
-                  <div 
+                  <div
                     onClick={() => toggleCategory(key)}
                     className={`flex items-center justify-between px-2.5 py-2 cursor-pointer transition ${
                       isActive ? 'bg-navy-50/60' : 'bg-gray-50 opacity-60'
@@ -240,7 +297,6 @@ export default function MapView() {
                       </span>
                     </div>
 
-                    {/* Botón desplegable para ver sub-items */}
                     {categoryItems.length > 0 && (
                       <button
                         onClick={(e) => toggleExpand(e, key)}
@@ -252,7 +308,6 @@ export default function MapView() {
                     )}
                   </div>
 
-                  {/* Sub-lista de lugares pertenecientes a la categoría */}
                   {isExpanded && isActive && (
                     <div className="flex flex-col bg-white border-t border-gray-100 py-1">
                       {categoryItems.map((item) => (
@@ -276,21 +331,35 @@ export default function MapView() {
 
       {/* Botones Flotantes Inferiores */}
       <div className="absolute bottom-20 right-4 z-[500] flex flex-col gap-2.5 items-end">
+        {/* Botón Filtros */}
         <button
           onClick={() => setShowLegend((s) => !s)}
           className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-full shadow-card active:scale-95 transition text-xs font-bold ${
-            showLegend 
-              ? 'bg-navy-500 text-white' 
-              : 'bg-gold-500 text-navy-600'
+            showLegend ? 'bg-navy-500 text-white' : 'bg-gold-500 text-navy-600'
           }`}
         >
           <span className="text-sm leading-none">☰</span> Filtros
         </button>
 
+        {/* Botón Ubicación del Usuario (GPS) */}
+        <button
+          onClick={handleGetUserLocation}
+          disabled={isLocating}
+          className="bg-white text-navy-600 w-11 h-11 rounded-full shadow-card flex items-center justify-center active:scale-95 transition border border-gray-100 disabled:opacity-50"
+          aria-label="Mi Ubicación Actual"
+          title="Mi Ubicación Actual"
+        >
+          <span className={`text-lg leading-none ${isLocating ? 'animate-spin' : ''}`}>
+            {isLocating ? '🌀' : '🎯'}
+          </span>
+        </button>
+
+        {/* Botón Recentrar Mapa (Círculo) */}
         <button
           onClick={recenter}
           className="bg-white text-navy-500 w-11 h-11 rounded-full shadow-card flex items-center justify-center active:scale-95 transition border border-gray-100"
           aria-label="Ver toda la ruta"
+          title="Ver toda la ruta"
         >
           <span className="text-xl leading-none">⊙</span>
         </button>
