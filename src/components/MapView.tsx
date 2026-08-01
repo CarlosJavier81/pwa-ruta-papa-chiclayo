@@ -68,7 +68,6 @@ function makeIcon(color: string, emoji: string) {
   });
 }
 
-// Icono animado para la ubicación en vivo del usuario
 function makeUserIcon() {
   return L.divIcon({
     className: 'user-location-marker',
@@ -87,7 +86,9 @@ export default function MapView() {
   const markersRef = useRef<MarkerData[]>([]);
   const userMarkerRef = useRef<L.Marker | null>(null);
 
-  const [activeCats, setActiveCats] = useState<Set<MapPointCategory>>(new Set(Object.keys(categoryConfig) as MapPointCategory[]));
+  const [activeCats, setActiveCats] = useState<Set<MapPointCategory>>(
+    new Set(Object.keys(categoryConfig) as MapPointCategory[])
+  );
   const [expandedCat, setExpandedCat] = useState<MapPointCategory | null>(null);
   const [showLegend, setShowLegend] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
@@ -108,7 +109,6 @@ export default function MapView() {
       maxZoom: 19,
     }).addTo(map);
 
-    // Mapeo de puntos GeoJSON
     markersRef.current = data.features.map((f, idx) => {
       const [lng, lat] = f.geometry.coordinates;
       const cat = categoryFromStyle(f.properties.styleUrl);
@@ -133,7 +133,9 @@ export default function MapView() {
     });
 
     if (data.features.length > 0) {
-      const bounds = L.latLngBounds(data.features.map((f) => [f.geometry.coordinates[1], f.geometry.coordinates[0]] as [number, number]));
+      const bounds = L.latLngBounds(
+        data.features.map((f) => [f.geometry.coordinates[1], f.geometry.coordinates[0]] as [number, number])
+      );
       map.fitBounds(bounds, { padding: [40, 40] });
     }
 
@@ -152,7 +154,6 @@ export default function MapView() {
     };
   }, []);
 
-  // Filtrado de capas por categoría
   useEffect(() => {
     if (!mapRef.current) return;
     const active = activeCats;
@@ -196,7 +197,6 @@ export default function MapView() {
     setShowLegend(false);
   };
 
-  // Función optimizada para obtener la ubicación con manejo de primer intento
   const handleGetUserLocation = () => {
     if (!navigator.geolocation) {
       alert('Tu navegador no soporta geolocalización.');
@@ -232,16 +232,13 @@ export default function MapView() {
     };
 
     const errorCallback = (error: GeolocationPositionError) => {
-      console.warn('Error en primer intento de GPS:', error.message);
+      console.warn('Error en GPS:', error.message);
 
-      // Si el error fue por tiempo de espera (Timeout) o fallo de posición
       if (error.code === error.TIMEOUT || error.code === error.POSITION_UNAVAILABLE) {
-        // Reintento automático con mayor tolerancia de tiempo
         navigator.geolocation.getCurrentPosition(
           successCallback,
           () => {
             setIsLocating(false);
-            // Mensaje amigable si tampoco funcionó el reintento automático
             alert(
               '⚡ El GPS de tu dispositivo tardó en responder.\n\nPor favor, vuelve a presionar el botón de ubicación en unos segundos.'
             );
@@ -257,61 +254,18 @@ export default function MapView() {
       }
     };
 
-    // Primer intento de geolocalización
     navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
       enableHighAccuracy: true,
-      timeout: 8000, // 8 segundos para el primer intento
+      timeout: 8000,
       maximumAge: 0,
     });
   };
 
-    setIsLocating(true);
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const userLatLng: [number, number] = [latitude, longitude];
-
-        if (!mapRef.current) return;
-
-        // Si el marcador de usuario ya existe, solo actualiza la posición
-        if (userMarkerRef.current) {
-          userMarkerRef.current.setLatLng(userLatLng);
-        } else {
-          // Crear un nuevo marcador para el usuario
-          userMarkerRef.current = L.marker(userLatLng, {
-            icon: makeUserIcon(),
-            zIndexOffset: 1000, // Para que quede por encima de los otros pines
-          })
-            .addTo(mapRef.current)
-            .bindPopup(
-              `<div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1D3557;text-align:center;">
-                📍 Tu ubicación actual
-              </div>`
-            );
-        }
-
-        // Centrar suavemente en el usuario
-        mapRef.current.flyTo(userLatLng, 15, { duration: 1.2 });
-        userMarkerRef.current.openPopup();
-        setIsLocating(false);
-      },
-      (error) => {
-        setIsLocating(false);
-        console.error('Error al obtener ubicación:', error);
-        if (error.code === error.PERMISSION_DENIED) {
-          alert('Por favor permite el acceso a tu ubicación en tu navegador para ver tu posición en el mapa.');
-        } else {
-          alert('No pudimos obtener tu ubicación. Verifica tu señal GPS.');
-        }
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  };
-
   const recenter = () => {
     if (!mapRef.current || data.features.length === 0) return;
-    const bounds = L.latLngBounds(data.features.map((f) => [f.geometry.coordinates[1], f.geometry.coordinates[0]] as [number, number]));
+    const bounds = L.latLngBounds(
+      data.features.map((f) => [f.geometry.coordinates[1], f.geometry.coordinates[0]] as [number, number])
+    );
     mapRef.current.fitBounds(bounds, { padding: [40, 40] });
   };
 
@@ -327,73 +281,80 @@ export default function MapView() {
         </div>
       </div>
 
-      {/* Panel Flotante de Filtros y Lista de Lugares */}
+      {/* Panel Flotante de Filtros */}
       {showLegend && (
         <div className="absolute bottom-48 right-4 left-4 sm:left-auto z-[500] bg-white p-3.5 rounded-2xl shadow-xl border border-navy-100 sm:max-w-[280px] max-h-[55vh] flex flex-col">
           <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-gray-100 flex-shrink-0">
             <span className="text-xs font-bold text-navy-600 uppercase tracking-wider">Filtros y Puntos</span>
-            <button onClick={() => setShowLegend(false)} className="text-gray-400 hover:text-gray-600 text-xs font-bold px-1">
+            <button
+              onClick={() => setShowLegend(false)}
+              className="text-gray-400 hover:text-gray-600 text-xs font-bold px-1"
+            >
               ✕
             </button>
           </div>
 
           <div className="flex flex-col gap-2 overflow-y-auto pr-1">
-            {(Object.entries(categoryConfig) as [MapPointCategory, { label: string; color: string }][]).map(([key, cfg]) => {
-              const isActive = activeCats.has(key);
-              const isExpanded = expandedCat === key;
-              const categoryItems = markersRef.current.filter((m) => m.category === key);
+            {(Object.entries(categoryConfig) as [MapPointCategory, { label: string; color: string }][]).map(
+              ([key, cfg]) => {
+                const isActive = activeCats.has(key);
+                const isExpanded = expandedCat === key;
+                const categoryItems = markersRef.current.filter((m) => m.category === key);
 
-              return (
-                <div key={key} className="flex flex-col rounded-lg border border-gray-200 overflow-hidden bg-white">
-                  <div
-                    onClick={() => toggleCategory(key)}
-                    className={`flex items-center justify-between px-2.5 py-2 cursor-pointer transition ${
-                      isActive ? 'bg-navy-50/60' : 'bg-gray-50 opacity-60'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <span className="w-3 h-3 rounded-full border border-white shadow-sm flex-shrink-0" style={{ background: cfg.color }} />
-                      <span className="text-xs font-semibold text-navy-600 truncate">{cfg.label}</span>
-                      <span className="text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.2 rounded-full font-bold">
-                        {categoryItems.length}
-                      </span>
+                return (
+                  <div key={key} className="flex flex-col rounded-lg border border-gray-200 overflow-hidden bg-white">
+                    <div
+                      onClick={() => toggleCategory(key)}
+                      className={`flex items-center justify-between px-2.5 py-2 cursor-pointer transition ${
+                        isActive ? 'bg-navy-50/60' : 'bg-gray-50 opacity-60'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className="w-3 h-3 rounded-full border border-white shadow-sm flex-shrink-0"
+                          style={{ background: cfg.color }}
+                        />
+                        <span className="text-xs font-semibold text-navy-600 truncate">{cfg.label}</span>
+                        <span className="text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.2 rounded-full font-bold">
+                          {categoryItems.length}
+                        </span>
+                      </div>
+
+                      {categoryItems.length > 0 && (
+                        <button
+                          onClick={(e) => toggleExpand(e, key)}
+                          className="text-gray-400 hover:text-navy-600 px-1 text-xs font-bold"
+                          aria-label="Desplegar lista"
+                        >
+                          {isExpanded ? '▲' : '▼'}
+                        </button>
+                      )}
                     </div>
 
-                    {categoryItems.length > 0 && (
-                      <button
-                        onClick={(e) => toggleExpand(e, key)}
-                        className="text-gray-400 hover:text-navy-600 px-1 text-xs font-bold"
-                        aria-label="Desplegar lista"
-                      >
-                        {isExpanded ? '▲' : '▼'}
-                      </button>
+                    {isExpanded && isActive && (
+                      <div className="flex flex-col bg-white border-t border-gray-100 py-1">
+                        {categoryItems.map((item) => (
+                          <button
+                            key={item.id}
+                            onClick={() => selectPoint(item)}
+                            className="text-left px-3 py-1.5 text-xs text-gray-700 hover:bg-gold-100/50 hover:text-navy-600 transition flex items-center justify-between border-b border-gray-50 last:border-none"
+                          >
+                            <span className="truncate pr-2">• {item.name}</span>
+                            <span className="text-[10px] text-gold-600 font-bold">Ver →</span>
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
-
-                  {isExpanded && isActive && (
-                    <div className="flex flex-col bg-white border-t border-gray-100 py-1">
-                      {categoryItems.map((item) => (
-                        <button
-                          key={item.id}
-                          onClick={() => selectPoint(item)}
-                          className="text-left px-3 py-1.5 text-xs text-gray-700 hover:bg-gold-100/50 hover:text-navy-600 transition flex items-center justify-between border-b border-gray-50 last:border-none"
-                        >
-                          <span className="truncate pr-2">• {item.name}</span>
-                          <span className="text-[10px] text-gold-600 font-bold">Ver →</span>
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
+                );
+              }
+            )}
           </div>
         </div>
       )}
 
       {/* Botones Flotantes Inferiores */}
       <div className="absolute bottom-20 right-4 z-[500] flex flex-col gap-2.5 items-end">
-        {/* Botón Filtros */}
         <button
           onClick={() => setShowLegend((s) => !s)}
           className={`flex items-center gap-1.5 px-3.5 py-2.5 rounded-full shadow-card active:scale-95 transition text-xs font-bold ${
@@ -403,7 +364,6 @@ export default function MapView() {
           <span className="text-sm leading-none">☰</span> Filtros
         </button>
 
-        {/* Botón Ubicación del Usuario (GPS) */}
         <button
           onClick={handleGetUserLocation}
           disabled={isLocating}
@@ -416,7 +376,6 @@ export default function MapView() {
           </span>
         </button>
 
-        {/* Botón Recentrar Mapa (Círculo) */}
         <button
           onClick={recenter}
           className="bg-white text-navy-500 w-11 h-11 rounded-full shadow-card flex items-center justify-center active:scale-95 transition border border-gray-100"
