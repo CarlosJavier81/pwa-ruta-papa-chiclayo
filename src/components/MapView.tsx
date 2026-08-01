@@ -196,12 +196,74 @@ export default function MapView() {
     setShowLegend(false);
   };
 
-  // Función para obtener la ubicación actual del usuario
+  // Función optimizada para obtener la ubicación con manejo de primer intento
   const handleGetUserLocation = () => {
     if (!navigator.geolocation) {
       alert('Tu navegador no soporta geolocalización.');
       return;
     }
+
+    setIsLocating(true);
+
+    const successCallback = (position: GeolocationPosition) => {
+      const { latitude, longitude } = position.coords;
+      const userLatLng: [number, number] = [latitude, longitude];
+
+      if (!mapRef.current) return;
+
+      if (userMarkerRef.current) {
+        userMarkerRef.current.setLatLng(userLatLng);
+      } else {
+        userMarkerRef.current = L.marker(userLatLng, {
+          icon: makeUserIcon(),
+          zIndexOffset: 1000,
+        })
+          .addTo(mapRef.current)
+          .bindPopup(
+            `<div style="font-family:Inter,sans-serif;font-size:13px;font-weight:600;color:#1D3557;text-align:center;">
+              📍 Tu ubicación actual
+            </div>`
+          );
+      }
+
+      mapRef.current.flyTo(userLatLng, 15, { duration: 1.2 });
+      userMarkerRef.current.openPopup();
+      setIsLocating(false);
+    };
+
+    const errorCallback = (error: GeolocationPositionError) => {
+      console.warn('Error en primer intento de GPS:', error.message);
+
+      // Si el error fue por tiempo de espera (Timeout) o fallo de posición
+      if (error.code === error.TIMEOUT || error.code === error.POSITION_UNAVAILABLE) {
+        // Reintento automático con mayor tolerancia de tiempo
+        navigator.geolocation.getCurrentPosition(
+          successCallback,
+          () => {
+            setIsLocating(false);
+            // Mensaje amigable si tampoco funcionó el reintento automático
+            alert(
+              '⚡ El GPS de tu dispositivo tardó en responder.\n\nPor favor, vuelve a presionar el botón de ubicación en unos segundos.'
+            );
+          },
+          { enableHighAccuracy: false, timeout: 15000, maximumAge: 10000 }
+        );
+      } else if (error.code === error.PERMISSION_DENIED) {
+        setIsLocating(false);
+        alert('Para ver tu ubicación, activa los permisos de GPS/Ubicación en los ajustes de tu navegador.');
+      } else {
+        setIsLocating(false);
+        alert('No pudimos obtener tu ubicación. Por favor, intenta presionar el botón nuevamente.');
+      }
+    };
+
+    // Primer intento de geolocalización
+    navigator.geolocation.getCurrentPosition(successCallback, errorCallback, {
+      enableHighAccuracy: true,
+      timeout: 8000, // 8 segundos para el primer intento
+      maximumAge: 0,
+    });
+  };
 
     setIsLocating(true);
 
