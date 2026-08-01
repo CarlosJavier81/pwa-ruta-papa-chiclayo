@@ -1,23 +1,50 @@
-import { useState } from 'react';
-import HomeView from '@/components/HomeView';
-import MapView from '@/components/MapView';
-import DirectoryView from '@/components/DirectoryView';
-import GuideView from '@/components/GuideView';
-import BottomNav, { type TabId } from '@/components/BottomNav';
+import { Home as HomeIcon, Map as MapIcon, BookOpen, ListChecks } from 'lucide-react';
 
-export default function App() {
-  // Inicia por defecto en 'inicio' para evitar problemas de renderizado del mapa en iOS
-  const [tab, setTab] = useState<TabId>('inicio');
+export type TabId = 'inicio' | 'mapa' | 'directorio' | 'guia';
 
+const tabs: { id: TabId; label: string; Icon: typeof MapIcon }[] = [
+  { id: 'inicio', label: 'Inicio', Icon: HomeIcon },
+  { id: 'mapa', label: 'Mapa', Icon: MapIcon },
+  { id: 'directorio', label: 'Directorio', Icon: BookOpen },
+  { id: 'guia', label: 'Guía', Icon: ListChecks },
+];
+
+export default function BottomNav({
+  active,
+  onChange,
+}: {
+  active: TabId;
+  onChange: (t: TabId) => void;
+}) {
   return (
-    <div className="fixed inset-0 bg-gray-50 text-navy-500 overflow-hidden">
-      <div className="h-full w-full">
-        {tab === 'inicio' && <HomeView onNavigate={(nextTab) => setTab(nextTab)} />}
-        {tab === 'mapa' && <MapView />}
-        {tab === 'directorio' && <DirectoryView />}
-        {tab === 'guia' && <GuideView />}
+    <nav className="fixed bottom-0 inset-x-0 z-[1000] bg-white shadow-nav border-t border-navy-50">
+      <div className="flex items-stretch justify-around px-2 pt-1.5 pb-2 safe-bottom">
+        {tabs.map(({ id, label, Icon }) => {
+          const on = active === id;
+          return (
+            <button
+              key={id}
+              onClick={() => onChange(id)}
+              className="flex flex-col items-center gap-1 flex-1 py-1 transition"
+            >
+              <span
+                className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all duration-200 ${
+                  on ? 'bg-navy-500 text-gold-500 shadow-card scale-105' : 'text-navy-300'
+                }`}
+              >
+                <Icon size={22} strokeWidth={on ? 2.5 : 2} />
+              </span>
+              <span
+                className={`text-[11px] font-semibold tracking-wide ${
+                  on ? 'text-navy-500' : 'text-navy-300'
+                }`}
+              >
+                {label}
+              </span>
+            </button>
+          );
+        })}
       </div>
-      <BottomNav active={tab} onChange={setTab} />
-    </div>
+    </nav>
   );
 }
