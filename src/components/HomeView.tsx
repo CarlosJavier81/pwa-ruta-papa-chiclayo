@@ -44,7 +44,7 @@ export default function HomeView({ onNavigate }: HomeProps) {
               🏨
             </div>
             <div>
-              <h2 className="font-bold text-navy-600 text-base">Servicios y Hospedajes</h2>
+              <h2 className="font-bold text-navy-600 text-base">Directorio</h2>
               <p className="text-xs text-gray-500">Restaurantes, hoteles y puntos clave</p>
             </div>
           </div>
