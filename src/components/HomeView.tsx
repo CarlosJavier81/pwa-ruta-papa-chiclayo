@@ -60,7 +60,7 @@ export default function HomeView({ onNavigate }: HomeProps) {
     <div className="flex flex-col min-h-screen bg-gray-50 px-4 pt-6 pb-24">
       {/* Banner de Bienvenida */}
       <div className="bg-navy-500 text-white rounded-2xl p-5 mb-6 shadow-card">
-        <span className="text-xs uppercase font-bold tracking-widest text-gold-500">Guía Oficial PWA</span>
+        <span className="text-xs uppercase font-bold tracking-widest text-gold-500">Guía Chiclayo - Perú</span>
         <h1 className="font-display font-bold text-2xl mt-1">Ruta Papal Chiclayo</h1>
         <p className="text-xs text-navy-100 mt-2 leading-relaxed">
           Explora la ruta, consulta los puntos de interés, alojamientos y accesos recomendados.
