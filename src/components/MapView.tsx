@@ -80,18 +80,50 @@ function makeUserIcon() {
   });
 }
 
+// Generador de enlaces para apps externas de GPS
+function buildGpsUrls(destLat: number, destLng: number, userCoords?: [number, number] | null) {
+  const originParam = userCoords ? `&origin=${userCoords[0]},${userCoords[1]}` : '';
+  const gmaps = `https://www.google.com/maps/dir/?api=1${originParam}&destination=${destLat},${destLng}&travelmode=driving`;
+  const waze = `https://waze.com/ul?ll=${destLat},${destLng}&navigate=yes`;
+  return { gmaps, waze };
+}
+
 export default function MapView() {
   const mapRef = useRef<L.Map | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<MarkerData[]>([]);
   const userMarkerRef = useRef<L.Marker | null>(null);
 
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [activeCats, setActiveCats] = useState<Set<MapPointCategory>>(
     new Set(Object.keys(categoryConfig) as MapPointCategory[])
   );
   const [expandedCat, setExpandedCat] = useState<MapPointCategory | null>(null);
   const [showLegend, setShowLegend] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
+
+  // Función para construir la tarjeta HTML con botones de navegación GPS
+  const createPopupContent = (name: string, label: string, color: string, desc: string, lat: number, lng: number, userPos?: [number, number] | null) => {
+    const { gmaps, waze } = buildGpsUrls(lat, lng, userPos);
+    
+    return `<div style="font-family:Inter,sans-serif;min-width:210px;max-width:260px;">
+      <div style="font-weight:700;color:#1D3557;font-size:14px;margin-bottom:4px;">${name}</div>
+      <div style="font-size:11px;color:${color};text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:600;">${label}</div>
+      <div style="font-size:12px;color:#4A5568;line-height:1.4;margin-bottom:12px;">${desc}</div>
+      
+      <div style="border-top:1px solid #E2E8F0;padding-top:8px;display:flex;flex-direction:column;gap:6px;">
+        <span style="font-size:10px;font-weight:700;color:#718096;text-transform:uppercase;">Cómo llegar:</span>
+        <div style="display:flex;gap:6px;">
+          <a href="${gmaps}" target="_blank" rel="noopener noreferrer" style="flex:1;background:#2563EB;color:#fff;text-align:center;padding:6px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;">
+            <span>🗺️</span> Google Maps
+          </a>
+          <a href="${waze}" target="_blank" rel="noopener noreferrer" style="background:#33CCFF;color:#1A202C;text-align:center;padding:6px 8px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;">
+            <span>🚗</span> Waze
+          </a>
+        </div>
+      </div>
+    </div>`;
+  };
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -116,11 +148,15 @@ export default function MapView() {
       const m = L.marker([lat, lng], { icon: makeIcon(cfg.color, cfg.emoji) }).addTo(map);
 
       m.bindPopup(
-        `<div style="font-family:Inter,sans-serif;min-width:200px;max-width:260px;">
-          <div style="font-weight:700;color:#1D3557;font-size:14px;margin-bottom:4px;">${f.properties.name}</div>
-          <div style="font-size:11px;color:${cfg.color};text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:600;">${cfg.label}</div>
-          <div style="font-size:13px;color:#333;line-height:1.45;">${descriptionText(f.properties.description)}</div>
-        </div>`
+        createPopupContent(
+          f.properties.name,
+          cfg.label,
+          cfg.color,
+          descriptionText(f.properties.description),
+          lat,
+          lng,
+          userLocation
+        )
       );
 
       return {
@@ -153,6 +189,29 @@ export default function MapView() {
       mapRef.current = null;
     };
   }, []);
+
+  // Actualizar el HTML de los popups si la ubicación del usuario cambia
+  useEffect(() => {
+    if (!userLocation) return;
+    data.features.forEach((f, idx) => {
+      const item = markersRef.current[idx];
+      if (item && item.marker) {
+        const cat = item.category;
+        const cfg = categoryConfig[cat];
+        item.marker.setPopupContent(
+          createPopupContent(
+            f.properties.name,
+            cfg.label,
+            cfg.color,
+            descriptionText(f.properties.description),
+            item.coordinates[0],
+            item.coordinates[1],
+            userLocation
+          )
+        );
+      }
+    });
+  }, [userLocation]);
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -208,6 +267,8 @@ export default function MapView() {
     const successCallback = (position: GeolocationPosition) => {
       const { latitude, longitude } = position.coords;
       const userLatLng: [number, number] = [latitude, longitude];
+
+      setUserLocation(userLatLng);
 
       if (!mapRef.current) return;
 
