@@ -28,9 +28,10 @@
         "name": "Santuario Virgen de la Paz",
         "description": {
           "@type": "html",
-          "value": "Santuario mariano y convento conocido por su devoción y espacios de retiro espiritual; sede de peregrinaciones locales.<br>Cel: 957 615 070<br>Urb. El Santuario S/N, Chiclayo<br>https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/santuario-virgen-de-la-paz"
+          "value": "Santuario mariano y convento conocido por su devoción y espacios de retiro espiritual; sede de peregrinaciones locales.<br>Cel: 957 615 070<br>Urb. El Santuario S/N, Chiclayo"
         },
         "styleUrl": "#icon-1670-FFD600",
+        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/santuario-virgen-de-la-paz",
         "icon": "images/icon-1.png"
       }
     },
@@ -44,9 +45,10 @@
         "name": "Iglesia San Pedro",
         "description": {
           "@type": "html",
-          "value": "Iglesia matriz de Monsefú, centro de la vida religiosa y cultural del distrito, famosa por sus festividades patronales.<br>Cel: 975 560 978<br>Plaza de Armas, Monsefú<br>https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-san-pedro"
+          "value": "Iglesia matriz de Monsefú, centro de la vida religiosa y cultural del distrito, famosa por sus festividades patronales.<br>Cel: 975 560 978<br>Plaza de Armas, Monsefú"
         },
         "styleUrl": "#icon-1670-FFD600",
+        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-san-pedro",
         "icon": "images/icon-1.png"
       }
     },
@@ -60,9 +62,10 @@
         "name": "Iglesia Santa María Magdalena",
         "description": {
           "@type": "html",
-          "value": "Templo histórico de Ciudad Eten, conocido por su tradición religiosa y relevancia cultural local.<br>Cel: 951 907 121<br>Plaza de Armas, Ciudad Eten<br>https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-santa-maria-magdalena"
+          "value": "Templo histórico de Ciudad Eten, conocido por su tradición religiosa y relevancia cultural local.<br>Cel: 951 907 121<br>Plaza de Armas, Ciudad Eten"
         },
         "styleUrl": "#icon-1670-FFD600",
+        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-santa-maria-magdalena",
         "icon": "images/icon-1.png"
       }
     },
@@ -76,9 +79,10 @@
         "name": "Convento San Agustín",
         "description": {
           "@type": "html",
-          "value": "Convento histórico y patrimonio cultural situado en Zaña; parte de circuitos culturales por la provincia.<br>Zaña, Lambayeque<br>https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/convento-san-agustin"
+          "value": "Convento histórico y patrimonio cultural situado en Zaña; parte de circuitos culturales por la provincia.<br>Zaña, Lambayeque"
         },
         "styleUrl": "#icon-1670-FFD600",
+        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/convento-san-agustin",
         "icon": "images/icon-1.png"
       }
     },
@@ -92,9 +96,10 @@
         "name": "Museo Tumbas Reales Señor de Sipán",
         "description": {
           "@type": "html",
-          "value": "Museo piramidal con exhibición de elaborados objetos fúnebres de las Tumbas Reales preíncas de Sipán.<br>https://museos.cultura.pe/museos/museo-tumbas-reales-de-sip%C3%A1n"
+          "value": "Museo piramidal con exhibición de elaborados objetos fúnebres de las Tumbas Reales preíncas de Sipán."
         },
         "styleUrl": "#icon-1636-9C27B0",
+        "website": "https://museos.cultura.pe/museos/museo-tumbas-reales-de-sip%C3%A1n",
         "icon": "images/icon-2.png"
       }
     },
@@ -108,6 +113,7 @@
         "name": "Museo Arqueológico Nacional Bruning",
         "description": "https://museos.cultura.pe/museos/museo-arqueol%c3%b3gico-nacional-br%c3%bcning",
         "styleUrl": "#icon-1636-9C27B0",
+        "website": "https://museos.cultura.pe/museos/museo-arqueol%c3%b3gico-nacional-br%c3%bcning",
         "icon": "images/icon-2.png"
       }
     },
@@ -121,9 +127,10 @@
         "name": "Playa Pimentel",
         "description": {
           "@type": "html",
-          "value": "Ubicada a solo 11 kilómetros (20 minutos) del centro de la ciudad, destaca por su extenso malecón, su histórico muelle y sus tradicionales \"caballitos de totora\". Es el lugar ideal para comer un buen ceviche frente al mar y disfrutar de hermosos atardeceres<br>https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=274"
+          "value": "Ubicada a solo 11 kilómetros (20 minutos) del centro de la ciudad, destaca por su extenso malecón, su histórico muelle y sus tradicionales \"caballitos de totora\". Es el lugar ideal para comer un buen ceviche frente al mar y disfrutar de hermosos atardeceres."
         },
         "styleUrl": "#icon-1681-0288D1",
+        "website": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=274",
         "icon": "images/icon-3.png"
       }
     },
@@ -137,9 +144,10 @@
         "name": "Playa Puerto Eten",
         "description": {
           "@type": "html",
-          "value": "Su playa, de arena suave y mar sereno, invita a la calma y al disfrute del paisaje.<br>https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=3744"
+          "value": "Su playa, de arena suave y mar sereno, invita a la calma y al disfrute del paisaje."
         },
         "styleUrl": "#icon-1681-0288D1",
+        "website": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=3744",
         "icon": "images/icon-3.png"
       }
     },
@@ -153,9 +161,10 @@
         "name": "Área de Conservación Privada Chaparrí",
         "description": {
           "@type": "html",
-          "value": "Un santuario de la biodiversidad en el norte de Perú, que alberga una gran variedad de especies únicas en su entorno natural.<br>https://www.peru.travel/es/atractivos/reserva-ecologica-chaparri"
+          "value": "Un santuario de la biodiversidad en el norte de Perú, que alberga una gran variedad de especies únicas en su entorno natural."
         },
         "styleUrl": "#icon-1720-7CB342",
+        "website": "https://www.peru.travel/es/atractivos/reserva-ecologica-chaparri",
         "icon": "images/icon-4.png"
       }
     },
@@ -169,9 +178,10 @@
         "name": "Bosque de Pómac",
         "description": {
           "@type": "html",
-          "value": "Es considerado el «Bosque geológico más grande y alto del mundo» y es una de las maravillas del Perú<br>https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=279"
+          "value": "Es considerado el «Bosque geológico más grande y alto del mundo» y es una de las maravillas del Perú."
         },
         "styleUrl": "#icon-1720-7CB342",
+        "website": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=279",
         "icon": "images/icon-4.png"
       }
     }
