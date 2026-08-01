@@ -174,7 +174,10 @@ export default function MapView() {
           descriptionText(f.properties.description),
           lat,
           lng,
-          userLocation
+          userLocation,
+          f.properties.website,   // 👈 Pasar website
+          f.properties.facebook,  // 👈 Pasar facebook
+          f.properties.instagram  // 👈 Pasar instagram
         )
       );
 
