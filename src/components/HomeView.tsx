@@ -1,3 +1,5 @@
+import InstallPWA from '@/components/InstallPWA'; // o la ruta relativa '../components/InstallPWA'
+
 interface HomeProps {
   onNavigate: (view: 'home' | 'mapa' | 'directorio' | 'info') => void;
 }
@@ -12,6 +14,10 @@ export default function HomeView({ onNavigate }: HomeProps) {
         <p className="text-xs text-navy-100 mt-2 leading-relaxed">
           Explora la ruta, consulta los puntos de interés, alojamientos y accesos recomendados.
         </p>
+        
+        {/* Botón / Instructivo de Instalación PWA */}
+      <InstallPWA />
+        
       </div>
 
       {/* Grid de Cards principales */}
