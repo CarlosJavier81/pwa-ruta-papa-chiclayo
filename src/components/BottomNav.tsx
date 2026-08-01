@@ -1,9 +1,9 @@
 import { Home as HomeIcon, Map as MapIcon, BookOpen, ListChecks } from 'lucide-react';
 
-export type TabId = 'home' | 'mapa' | 'directorio' | 'guia';
+export type TabId = 'inicio' | 'mapa' | 'directorio' | 'guia';
 
 const tabs: { id: TabId; label: string; Icon: typeof MapIcon }[] = [
-  { id: 'home', label: 'Inicio', Icon: HomeIcon },
+  { id: 'inicio', label: 'Inicio', Icon: HomeIcon },
   { id: 'mapa', label: 'Mapa', Icon: MapIcon },
   { id: 'directorio', label: 'Directorio', Icon: BookOpen },
   { id: 'guia', label: 'Guía', Icon: ListChecks },
