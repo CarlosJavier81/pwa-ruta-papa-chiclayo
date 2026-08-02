@@ -97,7 +97,7 @@ export default function HomeView({ onNavigate }: HomeProps) {
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 px-4 pt-6 pb-24">
+    <div className="flex flex-col h-full overflow-y-auto bg-gray-50 px-4 pt-6 pb-28">
       {/* Banner de Bienvenida */}
       <div className="bg-navy-500 text-white rounded-2xl p-5 mb-6 shadow-card">
         <span className="text-xs uppercase font-bold tracking-widest text-gold-500">Guía Chiclayo - Perú</span>
