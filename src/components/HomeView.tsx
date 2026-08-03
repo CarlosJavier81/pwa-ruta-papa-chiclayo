@@ -1,10 +1,23 @@
 import { useState } from 'react';
 import InstallPWA from '@/components/InstallPWA';
 import { type TabId } from '@/components/BottomNav';
-import { PhoneCall, AlertTriangle, ShieldAlert, HeartPulse, Flame, Ambulance, X, Utensils, MapPin, ExternalLink } from 'lucide-react';
+import { PhoneCall, AlertTriangle, ShieldAlert, HeartPulse, Flame, Ambulance, X, Utensils, MapPin, ExternalLink, ChevronRight, Store } from 'lucide-react';
 
 interface HomeProps {
   onNavigate: (view: TabId) => void;
+}
+
+// Interfaz para la estructura del plato típico
+interface Dish {
+  id: string;
+  name: string;
+  tagline: string;
+  description: string;
+  image: string;
+  recommendedPlaces: {
+    name: string;
+    address: string;
+  }[];
 }
 
 // Lista de números de emergencia en Chiclayo
@@ -53,48 +66,73 @@ const emergencyNumbers = [
   },
 ];
 
-// Destacados de Chiclayo (Gastronomía y Turismo)
-const chiclayoHighlights = [
+// Data de los 5 Platos Típicos con sus lugares recomendados
+const chiclayoDishes: Dish[] = [
   {
-    id: 'h1',
-    title: 'Ceviche a la Norteña',
-    subtitle: 'Con tortitas de choclo y sarandaja',
-    category: 'Gastronomía',
-    badgeBg: 'bg-amber-500/90',
+    id: 'c1',
+    name: 'Ceviche a la Norteña',
+    tagline: 'Con tortitas de choclo y zarandaja',
+    description: 'El clásico ceviche chiclayano preparado con pescado fresco del día, ají mochero, limón sutil y acompañado infaltablemente de tortitas de choclo doradas y zarandaja.',
     image: 'https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?auto=format&fit=crop&w=600&q=80',
-    targetTab: 'directorio' as TabId,
+    recommendedPlaces: [
+      { name: 'Restaurante El Cántaro', address: 'Calle Dos de Mayo 180, Lambayeque' },
+      { name: 'La Rompe Ola', address: 'Av. Rivera del Mar, Pimentel' },
+      { name: 'Cevicheria Mi Lanchita', address: 'Av. Bolognesi 534, Chiclayo' },
+    ],
   },
   {
-    id: 'h2',
-    title: 'Muelle de Pimentel',
-    subtitle: 'Caballitos de totora y atardeceres',
-    category: 'Destino Imperdible',
-    badgeBg: 'bg-sky-600/90',
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
-    targetTab: 'mapa' as TabId,
-  },
-  {
-    id: 'h3',
-    title: 'Arroz con Pato',
-    subtitle: 'Tradición gastronómica de Lambayeque',
-    category: 'Gastronomía',
-    badgeBg: 'bg-amber-500/90',
+    id: 'c2',
+    name: 'Arroz con Pato',
+    tagline: 'Tradición Moche con chicha de jora',
+    description: 'Emblemático plato preparado con pato tierno guisado en chicha de jora, culantro fresco y cerveza negra, servido con arroz graneado verdoso y salsa criolla.',
     image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
-    targetTab: 'directorio' as TabId,
+    recommendedPlaces: [
+      { name: 'Fiesta Gourmet', address: 'Av. Salaverry 1820, Chiclayo' },
+      { name: 'El Rincón del Pato', address: 'Av. Leguía 620, Chiclayo' },
+      { name: 'Restaurante Hebrón', address: 'Av. Balta 605, Chiclayo' },
+    ],
   },
   {
-    id: 'h4',
-    title: 'Catedral de Chiclayo',
-    subtitle: 'Arquitectura neoclásica en el Parque Principal',
-    category: 'Cultura',
-    badgeBg: 'bg-purple-600/90',
-    image: 'https://images.unsplash.com/photo-1548625361-185675f3a027?auto=format&fit=crop&w=600&q=80',
-    targetTab: 'mapa' as TabId,
+    id: 'c3',
+    name: 'Seco de Cabrito',
+    tagline: 'Tierna carne con frijoles camanejos',
+    description: 'Cabrito de leche macerado en chicha de jora y loche rayado, cocinado a fuego lento con culantro. Se sirve acompañado de jugosos frijoles y yuca sancochada.',
+    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    recommendedPlaces: [
+      { name: 'Restaurante El Huaralino', address: 'La Victoria, Chiclayo' },
+      { name: 'Sabor Norteño', address: 'Ca. Izaga 432, Chiclayo' },
+      { name: 'Tradición Lambayecana', address: 'Km 7.5 Carretera a Pimentel' },
+    ],
+  },
+  {
+    id: 'c4',
+    name: 'Espesado Chiclayano',
+    tagline: 'Plato ancestral de choclo y loche',
+    description: 'Un guiso prehispánico a base de choclo tierno molido con culantro y zapallo loche, servido tradicionalmente los días lunes con carne de pecho de res y arroz amarillo.',
+    image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80',
+    recommendedPlaces: [
+      { name: 'Restaurante La Poma', address: 'Ferrenafe / Chiclayo Centro' },
+      { name: 'Picantería La Norteñita', address: 'Ca. San Martín 210, Chiclayo' },
+      { name: 'El Rincón de antaño', address: 'Monsefú, Lambayeque' },
+    ],
+  },
+  {
+    id: 'c5',
+    name: 'Chinguirito',
+    tagline: 'Guiso/Ceviche de pez guitarra seco',
+    description: 'Joyita de la gastronomía chiclayana preparada con tiras de pez guitarra seco y deshilachado, sazonado con limón sutil, cebolla roja, ají mochero y yuca.',
+    image: 'https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?auto=format&fit=crop&w=600&q=80',
+    recommendedPlaces: [
+      { name: 'Cevichería Los Mochicas', address: 'Pimentel, Lambayeque' },
+      { name: 'El Cántaro', address: 'Calle Dos de Mayo 180, Lambayeque' },
+      { name: 'Mar & Selva', address: 'Av. Grau 412, Chiclayo' },
+    ],
   },
 ];
 
 export default function HomeView({ onNavigate }: HomeProps) {
   const [showEmergencyModal, setShowEmergencyModal] = useState(false);
+  const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
 
   return (
     <div className="flex flex-col h-full overflow-y-auto bg-gray-50 px-4 pt-6 pb-28">
@@ -164,56 +202,46 @@ export default function HomeView({ onNavigate }: HomeProps) {
         </button>
       </div>
 
-      {/* SECCIÓN DESTACADOS: Gastronomía y Turismo en Chiclayo */}
-      <div className="mt-7">
-        <div className="flex items-center justify-between mb-3 px-0.5">
+      {/* SECCIÓN GASTRONOMÍA: 5 Platos Típicos en Grid de 2 Columnas */}
+      <div className="mt-8">
+        <div className="flex items-center justify-between mb-3.5 px-0.5">
           <div>
-            <h2 className="font-bold text-navy-600 text-base leading-tight">Descubre Chiclayo</h2>
-            <p className="text-[11px] text-gray-500">Gastronomía y atardeceres moche</p>
+            <h2 className="font-bold text-navy-600 text-base leading-tight">Platos Típicos de Chiclayo</h2>
+            <p className="text-[11px] text-gray-500">Sabor y tradición lambayecana</p>
           </div>
-          <span className="text-[11px] bg-gold-100 text-gold-700 font-bold px-2.5 py-1 rounded-full border border-gold-200">
-            Lambayeque
+          <span className="text-[10px] bg-amber-100 text-amber-800 font-bold px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1">
+            <Utensils size={12} /> 5 Imperdibles
           </span>
         </div>
 
-        {/* Carrusel Horizontal con Scroll Snap */}
-        <div className="flex gap-3.5 overflow-x-auto pb-3 pt-1 -mx-4 px-4 scrollbar-none snap-x snap-mandatory">
-          {chiclayoHighlights.map((item) => (
+        {/* Grid Vertical de 2 Columnas */}
+        <div className="grid grid-cols-2 gap-3">
+          {chiclayoDishes.map((dish) => (
             <div
-              key={item.id}
-              onClick={() => onNavigate(item.targetTab)}
-              className="snap-start flex-shrink-0 w-64 bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm active:scale-98 transition cursor-pointer flex flex-col justify-between"
+              key={dish.id}
+              onClick={() => setSelectedDish(dish)}
+              className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm active:scale-95 transition cursor-pointer flex flex-col justify-between"
             >
-              {/* Imagen de Portada con Badge */}
-              <div className="relative h-36 w-full bg-navy-100 overflow-hidden">
+              {/* Imagen con Aspect Ratio controlado */}
+              <div className="relative h-28 w-full bg-navy-100 overflow-hidden">
                 <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-cover transition duration-300 hover:scale-105"
+                  src={dish.image}
+                  alt={dish.name}
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
-                <span
-                  className={`absolute top-2.5 left-2.5 ${item.badgeBg} backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm`}
-                >
-                  {item.category}
+                <span className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-md text-white text-[9px] font-bold px-2 py-0.5 rounded-md flex items-center gap-0.5">
+                  Ver opción <ChevronRight size={10} />
                 </span>
               </div>
 
-              {/* Información textual */}
-              <div className="p-3.5 flex flex-col justify-between flex-1">
+              {/* Título y Subtítulo */}
+              <div className="p-3 flex flex-col flex-1 justify-between">
                 <div>
-                  <h3 className="font-bold text-navy-600 text-sm leading-snug">{item.title}</h3>
-                  <p className="text-[11px] text-gray-500 mt-1 line-clamp-2 leading-relaxed">
-                    {item.subtitle}
+                  <h3 className="font-bold text-navy-600 text-xs leading-snug line-clamp-1">{dish.name}</h3>
+                  <p className="text-[10px] text-gray-500 mt-0.5 line-clamp-2 leading-tight">
+                    {dish.tagline}
                   </p>
-                </div>
-
-                <div className="mt-3 pt-2.5 border-t border-gray-50 flex items-center justify-between text-[11px] font-bold text-navy-500">
-                  <span className="flex items-center gap-1 text-gold-600">
-                    {item.targetTab === 'directorio' ? <Utensils size={13} /> : <MapPin size={13} />}
-                    Ver en {item.targetTab === 'directorio' ? 'Directorio' : 'Mapa'}
-                  </span>
-                  <ExternalLink size={13} className="text-gray-400" />
                 </div>
               </div>
             </div>
@@ -221,7 +249,95 @@ export default function HomeView({ onNavigate }: HomeProps) {
         </div>
       </div>
 
-      {/* Modal Emergente de Contactos */}
+      {/* MODAL 1: Detalle del Plato Típico */}
+      {selectedDish && (
+        <div className="fixed inset-0 z-[2000] bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-200">
+          <div className="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-2xl max-h-[88vh] flex flex-col overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-200">
+            {/* Cabecera con Fotografía Grande */}
+            <div className="relative h-48 w-full bg-navy-900 flex-shrink-0">
+              <img
+                src={selectedDish.image}
+                alt={selectedDish.name}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              
+              {/* Botón Cerrar */}
+              <button
+                onClick={() => setSelectedDish(null)}
+                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition"
+              >
+                <X size={18} />
+              </button>
+
+              {/* Título sobre la imagen */}
+              <div className="absolute bottom-3 left-4 right-4 text-white">
+                <span className="text-[10px] uppercase tracking-wider font-bold text-gold-400 bg-black/40 px-2 py-0.5 rounded backdrop-blur-md">
+                  Gastronomía Chiclayana
+                </span>
+                <h3 className="font-bold text-xl leading-tight mt-1">{selectedDish.name}</h3>
+              </div>
+            </div>
+
+            {/* Contenido Desplazable del Modal */}
+            <div className="p-4 overflow-y-auto space-y-4">
+              {/* Descripción */}
+              <div>
+                <h4 className="text-xs font-bold uppercase text-navy-400 tracking-wider mb-1">Descripción</h4>
+                <p className="text-xs text-gray-600 leading-relaxed bg-gray-50 p-3 rounded-xl border border-gray-100">
+                  {selectedDish.description}
+                </p>
+              </div>
+
+              {/* Lugares Recomendados */}
+              <div>
+                <div className="flex items-center gap-1.5 mb-2.5">
+                  <Store size={15} className="text-gold-600" />
+                  <h4 className="text-xs font-bold uppercase text-navy-600 tracking-wider">
+                    ¿Dónde probarlo en Chiclayo?
+                  </h4>
+                </div>
+
+                <div className="space-y-2">
+                  {selectedDish.recommendedPlaces.map((place, idx) => (
+                    <div
+                      key={idx}
+                      className="flex items-start gap-2.5 p-2.5 rounded-xl border border-gray-100 bg-white shadow-2xs"
+                    >
+                      <div className="w-6 h-6 rounded-lg bg-gold-100 text-gold-700 font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
+                        {idx + 1}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h5 className="font-bold text-xs text-navy-600 leading-tight">{place.name}</h5>
+                        <p className="text-[11px] text-gray-400 mt-0.5 flex items-center gap-1">
+                          <MapPin size={11} className="flex-shrink-0" />
+                          <span className="truncate">{place.address}</span>
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Footer Modal con Acción Directa */}
+            <div className="p-3.5 border-t border-gray-100 bg-gray-50 flex gap-2">
+              <button
+                onClick={() => {
+                  setSelectedDish(null);
+                  onNavigate('directorio');
+                }}
+                className="flex-1 py-2.5 bg-navy-500 text-white text-xs font-bold rounded-xl active:scale-98 transition flex items-center justify-center gap-2 shadow-sm"
+              >
+                <span>Ver Huariques en Directorio</span>
+                <ExternalLink size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 2: Emergencias Chiclayo */}
       {showEmergencyModal && (
         <div className="fixed inset-0 z-[2000] bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4">
           <div className="bg-white w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl max-h-[85vh] flex flex-col overflow-hidden shadow-2xl animate-in slide-in-from-bottom duration-200">
