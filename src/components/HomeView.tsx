@@ -162,7 +162,7 @@ const chiclayoDestinations: Destination[] = [
     name: 'Balneario de Pimentel',
     tagline: 'Muelle histórico y caballitos de totora',
     description: 'El balneario más importante de Lambayeque. Destaca por su majestuoso e histórico muelle de madera, sus atardeceres dorados y los tradicionales pescadores en caballitos de totora.',
-    image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80',
+    image: 'https://images.myguide-cdn.com/peru/companies/pimentel-beach/large/pimentel-beach-630849.jpg',
     highlights: [
       'Paseo por el Muelle de Pimentel más largo del Perú',
       'Observación del arte de pesca en Caballitos de Totora',
