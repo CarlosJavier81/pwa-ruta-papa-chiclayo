@@ -134,7 +134,7 @@ const chiclayoDishes: Dish[] = [
     name: 'Espesado Chiclayano',
     tagline: 'Plato ancestral de choclo y loche',
     description: 'Un guiso prehispánico a base de choclo tierno molido con culantro y zapallo loche, servido tradicionalmente los días lunes con carne de pecho de res y arroz amarillo.',
-    image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?auto=format&fit=crop&w=600&q=80',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPQxPlWBi4CNEi7RFl3CfrBaY8Irr3rPtU9hf9vX3DTgX6134c4hbqlbk&s=10',
     recommendedPlaces: [
       { name: 'Restaurante La Poma', address: 'Ferrenafe / Chiclayo Centro' },
       { name: 'Picantería La Norteñita', address: 'Ca. San Martín 210, Chiclayo' },
