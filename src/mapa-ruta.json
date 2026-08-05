@@ -169,6 +169,23 @@
       }
     },
     {
+  "type": "Feature",
+  "geometry": {
+    "type": "Point",
+    "coordinates": [-79.8477123, -6.5106428, 0]
+  },
+  "properties": {
+    "name": "Complejo Arqueológico Pirámides de Túcume",
+    "description": {
+      "@type": "html",
+      "value": "Impresionante centro ceremonial de la cultura Sicán y Chimú. Alberga 26 pirámides de adobe, el famoso Cerro La Raya y un museo de sitio interactivo."
+    },
+    "styleUrl": "#icon-1720-7CB342",
+    "website": "https://www.peru.travel/es/atractivos/piramides-de-tucume",
+    "icon": "images/icon-arqueologia.png"
+  }
+},
+    {
       "type": "Feature",
       "geometry": {
         "type": "Point",
