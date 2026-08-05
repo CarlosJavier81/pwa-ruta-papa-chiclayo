@@ -110,7 +110,7 @@ const chiclayoDishes: Dish[] = [
     name: 'Arroz con Pato',
     tagline: 'Tradición Moche con chicha de jora',
     description: 'Emblemático plato preparado con pato tierno guisado en chicha de jora, culantro fresco y cerveza negra, servido con arroz graneado verdoso y salsa criolla.',
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    image: 'https://jameaperu.com/assets/images/arroz-con-pato_800x534.webp',
     recommendedPlaces: [
       { name: 'Fiesta Gourmet', address: 'Av. Salaverry 1820, Chiclayo' },
       { name: 'El Rincón del Pato', address: 'Av. Leguía 620, Chiclayo' },
