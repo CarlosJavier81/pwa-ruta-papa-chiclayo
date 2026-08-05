@@ -3,7 +3,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import mapaRuta from '@/mapa-ruta.json';
 
-type MapPointCategory = 'iglesia' | 'museo' | 'playa' | 'naturaleza';
+type MapPointCategory = 'iglesia' | 'museo' | 'playa' | 'naturaleza' | 'arqueologia';
 
 interface GeoJSONDescription {
   '@type': string;
@@ -46,6 +46,7 @@ const categoryConfig: Record<MapPointCategory, { label: string; color: string; e
   museo: { label: 'Museos', color: '#9C27B0', emoji: '🏛' },
   playa: { label: 'Playas', color: '#0288D1', emoji: '🌊' },
   naturaleza: { label: 'Naturaleza', color: '#7CB342', emoji: '🌿' },
+  arqueologia: { label: 'Zonas Arqueológicas', color: '#E65100', emoji: '🏺' },
 };
 
 function categoryFromStyle(styleUrl: string): MapPointCategory {
@@ -53,6 +54,7 @@ function categoryFromStyle(styleUrl: string): MapPointCategory {
   if (styleUrl.includes('1636')) return 'museo';
   if (styleUrl.includes('1681')) return 'playa';
   if (styleUrl.includes('1720')) return 'naturaleza';
+  if (styleUrl.includes('1505')) return 'arqueologia';
   return 'iglesia';
 }
 
