@@ -122,7 +122,7 @@ const chiclayoDishes: Dish[] = [
     name: 'Seco de Cabrito',
     tagline: 'Tierna carne con frijoles camanejos',
     description: 'Cabrito de leche macerado en chicha de jora y loche rayado, cocinado a fuego lento con culantro. Se sirve acompañado de jugosos frijoles y yuca sancochada.',
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=600&q=80',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRM3avfamjmUWCxO6PLw-4UzJLMYt6DNlesKRXyM_clLQ&s=10',
     recommendedPlaces: [
       { name: 'Restaurante El Huaralino', address: 'La Victoria, Chiclayo' },
       { name: 'Sabor Norteño', address: 'Ca. Izaga 432, Chiclayo' },
