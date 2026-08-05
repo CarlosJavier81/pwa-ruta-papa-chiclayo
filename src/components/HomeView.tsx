@@ -174,7 +174,7 @@ const chiclayoDestinations: Destination[] = [
     name: 'Museo Tumbas Reales de Sipán',
     tagline: 'El mayor hallazgo arqueológico del continente',
     description: 'Ubicado en Lambayeque (a 15 min de Chiclayo), este museo con arquitectura inspirada en las pirámides moche alberga el fabuloso tesoro de oro, plata y ornamentos del Señor de Sipán.',
-    image: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80',
+    image: 'https://www.ytuqueplanes.com/imagenes/fotos/novedades/interna-Museo-Tumbas-Reales-de-Sip%C3%A1n-4.webp',
     highlights: [
       'Exposición de la tumba intacta del Gobernador Moche',
       'Más de 2,000 piezas de oro, plata y cobre dorado',
@@ -186,7 +186,7 @@ const chiclayoDestinations: Destination[] = [
     name: 'Santuario Histórico Bosque de Pómac',
     tagline: 'Naturaleza, algarrobos y pirámides Moche',
     description: 'Área natural protegida que alberga la mayor formación de algarrobos del planeta y el complejo arqueológico de Sicán con más de 30 pirámides trincadas en medio de la naturaleza.',
-    image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80',
+    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzEQAzUHg_L59CGtjvH90mR87hJjWFy4VEe60hYn41DAf85v3hIb37z8c&s=10',
     highlights: [
       'Caminata hacia el Algarrobo Milenario',
       'Vista panorámica desde el Mirador Las Ventanas',
@@ -198,7 +198,7 @@ const chiclayoDestinations: Destination[] = [
     name: 'Catedral y Parque Principal',
     tagline: 'El corazón neoclásico de Chiclayo',
     description: 'El punto de encuentro social de la ciudad. Su Catedral neoclásica diseñada en el siglo XIX destaca por sus tres arcos de portada y sus dos hermosas torres campanario.',
-    image: 'https://images.unsplash.com/photo-1548625361-185675f3a027?auto=format&fit=crop&w=600&q=80',
+    image: 'https://content-viajes.nationalgeographic.com.es/medio/2025/05/09/catedral-de-chiclayo_1606dda4_250509120925_1200x794.webp',
     highlights: [
       'Paseo peatonal por los jardines del Parque Principal',
       'Visita interior a la Santa Iglesia Catedral',
@@ -207,14 +207,14 @@ const chiclayoDestinations: Destination[] = [
   },
   {
     id: 'd5',
-    name: 'Mercado Modelo y Mercado de Brujos',
-    tagline: 'Misticismo, medicina tradicional y artesanía',
-    description: 'Un rincón cultural fascinante y único en la región norte. En su interior se encuentra la sección de chamanismo y curanderismo con hierbas, amuletos y tradiciones ancestrales.',
-    image: 'https://images.unsplash.com/photo-1533900298318-6b8da08a523e?auto=format&fit=crop&w=600&q=80',
+    name: 'Complejo Arqueológico Pirámides de Túcume',
+    tagline: 'El valle de las 26 pirámides de barro',
+    description: 'Impresionante centro ceremonial y político de la cultura Sicán y Chimú. Alberga 26 pirámides de adobe rodeadas de vegetación, un museo de sitio interactivo y el famoso mirador del Cerro La Raya.',
+    image: 'https://blog.redbus.pe/wp-content/uploads/2024/05/tucume.jpg',
     highlights: [
-      'Pasillos de medicina tradicional y hierbas medicinales',
-      'Venta de artesanías, sombreros de paja y recuerdos',
-      'Experiencia inmersiva en el misticismo norteño',
+      'Recorrido por Huaca Larga y el Templo de la Piedra Sagrada',
+      'Vista panorámica del valle desde el Mirador Cerro La Raya',
+      'Visita al Museo de Sitio con maquetas y tesoros moche y sicán',
     ],
   },
 ];
