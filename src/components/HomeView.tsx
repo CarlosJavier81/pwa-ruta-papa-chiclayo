@@ -146,7 +146,7 @@ const chiclayoDishes: Dish[] = [
     name: 'Chinguirito',
     tagline: 'Guiso/Ceviche de pez guitarra seco',
     description: 'Joyita de la gastronomía chiclayana preparada con tiras de pez guitarra seco y deshilachado, sazonado con limón sutil, cebolla roja, ají mochero y yuca.',
-    image: 'https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?auto=format&fit=crop&w=600&q=80',
+    image: 'https://cdn.tasteatlas.com/images/dishes/d1b7559fd70546c499a07c702bdabbfe.jpg?m=facebook',
     recommendedPlaces: [
       { name: 'Cevichería Los Mochicas', address: 'Pimentel, Lambayeque' },
       { name: 'El Cántaro', address: 'Calle Dos de Mayo 180, Lambayeque' },
