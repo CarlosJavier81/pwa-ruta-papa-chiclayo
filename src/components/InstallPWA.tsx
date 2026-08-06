@@ -18,8 +18,22 @@ interface BeforeInstallPromptEvent extends Event {
 
 // Función auxiliar para enviar eventos a GA4 de forma segura
 const sendGA4Event = (eventName: string, params: Record<string, any> = {}) => {
-  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-    window.gtag('event', eventName, params);
+  if (typeof window === 'undefined') return;
+
+  const eventPayload = {
+    ...params,
+    debug_mode: true // Muestra los eventos al instante en DebugView
+  };
+
+  if (typeof (window as any).gtag === 'function') {
+    (window as any).gtag('event', eventName, eventPayload);
+  } else if (Array.isArray((window as any).dataLayer)) {
+    (window as any).dataLayer.push({
+      event: eventName,
+      ...eventPayload
+    });
+  } else {
+    console.warn(`[GA4 Warning] No se pudo enviar el evento "${eventName}". El script de GA4 no está cargado en el HTML.`);
   }
 };
 
