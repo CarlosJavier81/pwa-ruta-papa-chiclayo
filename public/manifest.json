@@ -2,7 +2,7 @@
   "name": "Ruta del Papa - Chiclayo",
   "short_name": "Ruta del Papa",
   "description": "Guía interactiva de la ruta del Papa en Chiclayo: mapa, directorio de servicios y guía para asistentes a la misa.",
-  "start_url": "/",
+  "start_url": "/?utm_source=pwa&utm_medium=homescreen&utm_campaign=pwa_open",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
