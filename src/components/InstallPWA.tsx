@@ -1,9 +1,27 @@
 import { useEffect, useState } from 'react';
 
+// Declaración de tipos para Google Analytics (gtag)
+declare global {
+  interface Window {
+    gtag?: (
+      command: 'event',
+      eventName: string,
+      eventParams?: Record<string, any>
+    ) => void;
+  }
+}
+
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
+
+// Función auxiliar para enviar eventos a GA4 de forma segura
+const sendGA4Event = (eventName: string, params: Record<string, any> = {}) => {
+  if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
+    window.gtag('event', eventName, params);
+  }
+};
 
 export default function InstallPWA() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
@@ -12,7 +30,7 @@ export default function InstallPWA() {
   const [showIOSGuide, setShowIOSGuide] = useState(false);
 
   useEffect(() => {
-    // 1. Verificar si la app ya está instalada (Modo Standalone)
+    // 1. Verificar si la app ya está instalada o abierta en modo standalone
     const isApp = window.matchMedia('(display-mode: standalone)').matches 
       || (navigator as any).standalone 
       || document.referrer.includes('android-app://');
@@ -31,12 +49,26 @@ export default function InstallPWA() {
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
+
+      // Evento GA4: Se mostró el banner/botón de instalación disponible
+      sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
+    };
+
+    // 4. Capturar cuando la instalación se completa exitosamente
+    const handleAppInstalled = () => {
+      sendGA4Event('app_install', {
+        platform: isIosDevice ? 'ios' : 'android',
+        method: 'native_prompt'
+      });
+      setDeferredPrompt(null);
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
@@ -44,14 +76,32 @@ export default function InstallPWA() {
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
 
+    // Evento GA4: Clic en el botón "Instalar App"
+    sendGA4Event('pwa_install_click', { platform: 'android' });
+
     // Mostrar el prompt nativo de instalación
     await deferredPrompt.prompt();
     const choiceResult = await deferredPrompt.userChoice;
 
+    // Evento GA4: Resultado de la elección del usuario
+    sendGA4Event('pwa_install_choice', {
+      outcome: choiceResult.outcome // 'accepted' o 'dismissed'
+    });
+
     if (choiceResult.outcome === 'accepted') {
-      console.log('El usuario aceptó instalar la PWA');
       setDeferredPrompt(null);
     }
+  };
+
+  // Función para rastrear cuando un usuario de iPhone abre la guía
+  const handleToggleIOSGuide = () => {
+    setShowIOSGuide((prev) => {
+      const nextState = !prev;
+      if (nextState) {
+        sendGA4Event('pwa_ios_guide_opened', { platform: 'ios' });
+      }
+      return nextState;
+    });
   };
 
   // Si ya está abierta dentro de la App instalada, no mostramos nada
@@ -74,7 +124,7 @@ export default function InstallPWA() {
       {isIOS && (
         <div className="bg-white border border-navy-100 rounded-2xl p-4 shadow-card">
           <button
-            onClick={() => setShowIOSGuide((s) => !s)}
+            onClick={handleToggleIOSGuide}
             className="w-full flex items-center justify-between font-bold text-navy-600 text-sm"
           >
             <span className="flex items-center gap-2">
