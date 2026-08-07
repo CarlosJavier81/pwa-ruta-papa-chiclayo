@@ -8,12 +8,21 @@ declare global {
       eventName: string,
       eventParams?: Record<string, any>
     ) => void;
+    deferredPwaPrompt?: any;
   }
 }
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
+// Escuchar el evento antes de que React cargue para evitar perder la referencia
+if (typeof window !== 'undefined') {
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    window.deferredPwaPrompt = e;
+  });
 }
 
 // Función auxiliar para enviar eventos a GA4 de forma segura
@@ -59,22 +68,30 @@ export default function InstallPWA() {
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
     setIsIOS(isIosDevice);
 
-    // 3. Capturar el evento de instalación nativo en Android / Chrome
+    // 3. Revisar si el evento ya fue capturado globalmente
+    if (window.deferredPwaPrompt) {
+      setDeferredPrompt(window.deferredPwaPrompt);
+      sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
+    }
+
+    // 4. Capturar el evento de instalación nativo en Android / Chrome
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
+      window.deferredPwaPrompt = e;
       setDeferredPrompt(e as BeforeInstallPromptEvent);
 
       // Evento GA4: Se mostró el banner/botón de instalación disponible
       sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
     };
 
-    // 4. Capturar cuando la instalación se completa exitosamente
+    // 5. Capturar cuando la instalación se completa exitosamente
     const handleAppInstalled = () => {
       sendGA4Event('app_install', {
         platform: isIosDevice ? 'ios' : 'android',
         method: 'native_prompt'
       });
       setDeferredPrompt(null);
+      window.deferredPwaPrompt = null;
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -86,33 +103,40 @@ export default function InstallPWA() {
     };
   }, []);
 
-  // Función para activar la instalación en Android
+  // Función para activar la instalación en Android / Desktop
   const handleInstallClick = async () => {
-  // 1. Enviar el evento a GA4 primero
-  sendGA4Event('pwa_install_click', {
-    platform: isIOS ? 'ios' : 'android'
-  });
+    // 1. Enviar el evento a GA4 siempre que se haga clic
+    sendGA4Event('pwa_install_click', {
+      platform: isIOS ? 'ios' : 'android'
+    });
 
-  // 2. Verificar si tenemos guardado el evento nativo del navegador
-  if (!deferredPrompt) {
-    console.warn('El evento deferredPrompt no está disponible aún.');
-    return;
-  }
+    const activePrompt = deferredPrompt || window.deferredPwaPrompt;
 
-  // 3. Mostrar el prompt nativo de instalación
-  deferredPrompt.prompt();
+    // 2. Verificar si tenemos guardado el evento nativo del navegador
+    if (!activePrompt) {
+      console.warn('El evento deferredPrompt no está disponible en este navegador/sesión.');
+      return;
+    }
 
-  // 4. Esperar a que el usuario responda
-  const choiceResult = await deferredPrompt.userChoice;
-  
-  // 5. Enviar la decisión del usuario a GA4
-  sendGA4Event('pwa_install_choice', {
-    outcome: choiceResult.outcome // 'accepted' o 'dismissed'
-  });
+    try {
+      // 3. Mostrar el prompt nativo de instalación
+      await activePrompt.prompt();
 
-  // 6. Limpiar la referencia
-  setDeferredPrompt(null);
-};
+      // 4. Esperar a que el usuario responda
+      const choiceResult = await activePrompt.userChoice;
+      
+      // 5. Enviar la decisión del usuario a GA4
+      sendGA4Event('pwa_install_choice', {
+        outcome: choiceResult.outcome // 'accepted' o 'dismissed'
+      });
+
+      // 6. Limpiar referencias
+      setDeferredPrompt(null);
+      window.deferredPwaPrompt = null;
+    } catch (err) {
+      console.error('Error al ejecutar el prompt de instalación:', err);
+    }
+  };
 
   // Función para rastrear cuando un usuario de iPhone abre la guía
   const handleToggleIOSGuide = () => {
@@ -130,8 +154,8 @@ export default function InstallPWA() {
 
   return (
     <div className="w-full max-w-md mx-auto my-4 px-4">
-      {/* Opción A: Botón directo para Android / Chrome */}
-      {deferredPrompt && (
+      {/* Opción A: Botón directo para Android / Chrome / Desktop */}
+      {!isIOS && (
         <button
           onClick={handleInstallClick}
           className="w-full bg-navy-500 hover:bg-navy-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2 border border-gold-400"
