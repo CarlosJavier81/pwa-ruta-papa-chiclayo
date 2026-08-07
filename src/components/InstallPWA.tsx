@@ -88,24 +88,31 @@ export default function InstallPWA() {
 
   // Función para activar la instalación en Android
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
+  // 1. Enviar el evento a GA4 primero
+  sendGA4Event('pwa_install_click', {
+    platform: isIOS ? 'ios' : 'android'
+  });
 
-    // Evento GA4: Clic en el botón "Instalar App"
-    sendGA4Event('pwa_install_click', { platform: 'android' });
+  // 2. Verificar si tenemos guardado el evento nativo del navegador
+  if (!deferredPrompt) {
+    console.warn('El evento deferredPrompt no está disponible aún.');
+    return;
+  }
 
-    // Mostrar el prompt nativo de instalación
-    await deferredPrompt.prompt();
-    const choiceResult = await deferredPrompt.userChoice;
+  // 3. Mostrar el prompt nativo de instalación
+  deferredPrompt.prompt();
 
-    // Evento GA4: Resultado de la elección del usuario
-    sendGA4Event('pwa_install_choice', {
-      outcome: choiceResult.outcome // 'accepted' o 'dismissed'
-    });
+  // 4. Esperar a que el usuario responda
+  const choiceResult = await deferredPrompt.userChoice;
+  
+  // 5. Enviar la decisión del usuario a GA4
+  sendGA4Event('pwa_install_choice', {
+    outcome: choiceResult.outcome // 'accepted' o 'dismissed'
+  });
 
-    if (choiceResult.outcome === 'accepted') {
-      setDeferredPrompt(null);
-    }
-  };
+  // 6. Limpiar la referencia
+  setDeferredPrompt(null);
+};
 
   // Función para rastrear cuando un usuario de iPhone abre la guía
   const handleToggleIOSGuide = () => {
