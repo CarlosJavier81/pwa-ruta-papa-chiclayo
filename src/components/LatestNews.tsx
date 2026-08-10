@@ -52,10 +52,10 @@ export default function LatestNews() {
         >
           <div 
             className="bg-white w-full h-[90vh] sm:h-[85vh] sm:max-w-md rounded-t-3xl sm:rounded-3xl overflow-hidden shadow-2xl flex flex-col relative animate-slide-up"
-            onClick={(e) => e.stopPropagation()} // Evita cerrar al hacer clic dentro del contenido
+            onClick={(e) => e.stopPropagation()}
           >
             
-            {/* Único botón para cerrar (Cruz superior) */}
+            {/* Botón Cerrar (Cruz superior) */}
             <button
               onClick={() => setSelectedNews(null)}
               className="absolute top-4 right-4 z-10 bg-black/50 hover:bg-black/70 text-white w-9 h-9 rounded-full flex items-center justify-center font-bold text-base backdrop-blur-md transition-all active:scale-90"
@@ -64,7 +64,7 @@ export default function LatestNews() {
               ✕
             </button>
 
-            {/* Imagen del Modal (Ancho Completo) */}
+            {/* Imagen del Modal */}
             <div className="h-60 w-full flex-shrink-0 bg-gray-100 relative">
               <img
                 src={selectedNews.imageUrl}
@@ -85,6 +85,19 @@ export default function LatestNews() {
               <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
                 {selectedNews.content}
               </p>
+
+              {/* Botón "Leer más" Exclusivo del Modal */}
+              <div className="mt-4 pt-4 border-t border-gray-100">
+                <a
+                  href={selectedNews.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-navy-500 hover:bg-navy-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm"
+                >
+                  <span>Leer más</span>
+                  <span>↗</span>
+                </a>
+              </div>
             </div>
 
           </div>
