@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import InstallPWA from '@/components/InstallPWA';
 import { type TabId } from '@/components/BottomNav';
+import LatestNews from '@/components/LatestNews';
+
 import { 
   PhoneCall, 
   AlertTriangle, 
@@ -291,6 +293,8 @@ export default function HomeView({ onNavigate }: HomeProps) {
           <span className="text-red-500 text-lg font-bold">→</span>
         </button>
       </div>
+
+      <LatestNews />
 
       {/* SECCIÓN 1 GASTRONOMÍA: 5 Platos Típicos */}
       <div className="mt-8">
