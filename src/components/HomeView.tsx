@@ -294,6 +294,7 @@ export default function HomeView({ onNavigate }: HomeProps) {
         </button>
       </div>
 
+      {/* Ultimas noticias */}
       <LatestNews />
 
       {/* SECCIÓN 1 GASTRONOMÍA: 5 Platos Típicos */}
