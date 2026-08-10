@@ -5,7 +5,7 @@ export default function LatestNews() {
   const [selectedNews, setSelectedNews] = useState<NewsItem | null>(null);
 
   return (
-    <section className="w-full my-6">
+    <section className="w-full mt-8">
       {/* Encabezado de Sección */}
       <div className="flex items-center justify-between mb-3.5 px-0.5">
         <h2 className="font-bold text-navy-600 text-base leading-tight">
