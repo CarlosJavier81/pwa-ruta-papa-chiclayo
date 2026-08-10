@@ -8,7 +8,7 @@ export default function LatestNews() {
     <section className="w-full my-6">
       {/* Encabezado de Sección */}
       <div className="flex items-center justify-between px-4 mb-3">
-        <h2 className="text-lg font-bold text-navy-600 flex gap-2">
+        <h2 className="font-bold text-navy-600 text-base leading-tight">
         Últimas Noticias
         </h2>
         <span className="text-xs font-semibold text-gold-600 uppercase tracking-wider">
