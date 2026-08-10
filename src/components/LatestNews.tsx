@@ -73,8 +73,8 @@ export default function LatestNews() {
               />
             </div>
 
-            {/* Contenido Completo de la Noticia */}
-            <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-3 pb-10">
+            {/* Contenido Completo de la Noticia con espacio suficiente abajo (pb-28) */}
+            <div className="p-6 overflow-y-auto flex-1 flex flex-col gap-3 pb-28">
               <span className="text-xs font-semibold text-gold-600 uppercase tracking-wide">
                 {selectedNews.date}
               </span>
@@ -86,7 +86,7 @@ export default function LatestNews() {
                 {selectedNews.content}
               </p>
 
-              {/* Botón "Leer más" Exclusivo del Modal */}
+              {/* Botón "Leer más" */}
               <div className="mt-4 pt-4 border-t border-gray-100">
                 <a
                   href={selectedNews.url}
