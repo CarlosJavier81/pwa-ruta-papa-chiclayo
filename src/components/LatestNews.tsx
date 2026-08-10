@@ -7,7 +7,7 @@ export default function LatestNews() {
   return (
     <section className="w-full my-6">
       {/* Encabezado de Sección */}
-      <div className="flex items-center justify-between px-4 mb-3">
+      <div className="flex items-center justify-between mb-3.5 px-0.5">
         <h2 className="font-bold text-navy-600 text-base leading-tight">
         Últimas Noticias
         </h2>
