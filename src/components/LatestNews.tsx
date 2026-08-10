@@ -9,7 +9,7 @@ export default function LatestNews() {
       {/* Encabezado de Sección */}
       <div className="flex items-center justify-between px-4 mb-3">
         <h2 className="text-lg font-bold text-navy-600 flex items-center gap-2">
-          <span>📰</span> Últimas Noticias
+          Últimas Noticias
         </h2>
         <span className="text-xs font-semibold text-gold-600 uppercase tracking-wider">
           Actualidad
