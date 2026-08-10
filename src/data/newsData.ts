@@ -12,7 +12,7 @@ export const LATEST_NEWS: NewsItem[] = [
     title: 'Confirmado: El Papa León XIV visitará el Perú del 11 al 17 de noviembre',
     imageUrl: 'https://larutadelpapaleonperu.com/wp-content/uploads/2026/08/papa-leon-visita-peru.webp',
     date: '10 de Agosto, 2026',
-    content: 'El Vaticano ha confirmado oficialmente la llegada del Santo Padre al territorio peruano. La visita apostólica del Papa León XIV se llevará a cabo del 11 al 17 de noviembre de 2026, consolidándose como un evento histórico de profunda relevancia fe, unidad e impacto turístico para el país. Este viaje marca un hito especial, ya que representa un retorno lleno de afecto por parte del pontífice, quien guarda una estrecha relación con el Perú tras haber desempeñado labores misioneras y pastorales en el país durante años antes de su elección eclesial.'
+    content: 'El Vaticano ha confirmado oficialmente la llegada del Santo Padre al territorio peruano. La visita apostólica del Papa León XIV se llevará a cabo del 11 al 17 de noviembre de 2026, consolidándose como un evento histórico de profunda relevancia fe, unidad e impacto turístico para el país.'
   },
   {
     id: '2',
