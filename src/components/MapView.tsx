@@ -398,7 +398,7 @@ export default function MapView() {
 
       {/* Panel Flotante de Filtros por Rutas */}
       {showLegend && (
-        <div className="absolute bottom-48 right-4 left-4 sm:left-auto z-[500] bg-white p-3.5 rounded-2xl shadow-xl border border-navy-100 sm:max-w-[310px] max-h-[60vh] flex flex-col">
+        <div className="absolute bottom-48 right-4 left-4 sm:left-auto z-[500] bg-white p-3.5 rounded-2xl shadow-xl border border-navy-100 sm:max-w-[320px] max-h-[75vh] flex flex-col">
           <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-gray-100 flex-shrink-0">
             <span className="text-xs font-bold text-navy-600 uppercase tracking-wider">Filtrar por Rutas</span>
             <button
@@ -409,7 +409,7 @@ export default function MapView() {
             </button>
           </div>
 
-          <div className="flex flex-col gap-2 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-2 overflow-y-auto pr-1 flex-1 min-h-0">
             {([1, 2, 3, 4] as RouteNumber[]).map((routeNum) => {
               const cfg = routeConfig[routeNum];
               const isActive = activeRoutes.has(routeNum);
@@ -417,7 +417,7 @@ export default function MapView() {
               const routeItems = markersRef.current.filter((m) => m.route === routeNum);
 
               return (
-                <div key={routeNum} className="flex flex-col rounded-lg border border-gray-200 overflow-hidden bg-white">
+                <div key={routeNum} className="flex flex-col rounded-lg border border-gray-200 overflow-hidden bg-white flex-shrink-0">
                   <div
                     onClick={() => toggleRoute(routeNum)}
                     className={`flex items-center justify-between px-2.5 py-2 cursor-pointer transition ${
@@ -452,7 +452,7 @@ export default function MapView() {
                   </div>
 
                   {isExpanded && isActive && (
-                    <div className="flex flex-col bg-white border-t border-gray-100 py-1">
+                    <div className="flex flex-col bg-white border-t border-gray-100 py-1 max-h-[45vh] overflow-y-auto">
                       {routeItems.map((item) => (
                         <button
                           key={item.id}
