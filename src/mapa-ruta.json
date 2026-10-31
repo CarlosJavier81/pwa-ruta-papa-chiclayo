@@ -5,16 +5,113 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [-79.838008, -6.7716537, 0]
+        "coordinates": [
+          -79.83765,
+          -6.7717,
+          0
+        ]
       },
       "properties": {
-        "name": "Iglesia Santa María Catedral",
+        "name": "Iglesia Santa María Catedral de Chiclayo",
         "description": {
           "@type": "html",
-          "value": "Imponente templo neoclásico frente al Parque Principal; sede de la diócesis y atractivo arquitectónico principal de la ciudad.<br>Tel: 074 687395<br>Plaza de Armas - Chiclayo"
+          "value": "Construida entre los años 1869 y 1939, esta majestuosa construcción de estilo neoclásico es patrimonio cultural de la Nación (RM N° 329 - 1986 -ED), y símbolo de fe y arte en la ciudad de Chiclayo, siendo escenario de una historia única. Aquí sirvió como obispo, durante ocho años, el hoy Papa León XIV."
         },
+        "route": 1,
+        "category": "iglesia",
         "styleUrl": "#icon-1670-FFD600",
-        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-santa-maria-catedral",
+        "icon": "images/icon-1.png",
+        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-santa-maria-catedral"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.86931,
+          -6.79076,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Santuario Nuestra Señora de la Paz",
+        "description": {
+          "@type": "html",
+          "value": "Espacio sagrado dedicado a la Virgen María bajo la advocación de Nuestra Señora de la Paz, al servicio de las parroquias y de la pastoral de la Diócesis de Chiclayo. La iniciativa de construir el Santuario fue del Monseñor Ignacio María de Orbegozo, quien, motivado por su profunda devoción a la virgen, impulsó su creación y edificación."
+        },
+        "route": 1,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-FFD600",
+        "icon": "images/icon-1.png",
+        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/santuario-virgen-de-la-paz"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.87123,
+          -6.87795,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Iglesia San Pedro de Monsefú",
+        "description": {
+          "@type": "html",
+          "value": "Visita este histórico templo colonial del siglo XVIII, que alberga la venerada imagen de Jesús Nazareno Cautivo. Cada 14 de septiembre, vive una festividad cargada de emoción que, por más de cuatro siglos, ha unido fe, tradición y cultura en el corazón de Monsefú."
+        },
+        "route": 1,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-FFD600",
+        "icon": "images/icon-1.png",
+        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-san-pedro"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.86417,
+          -6.90806,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Iglesia Santa María Magdalena - Ciudad Eten",
+        "description": {
+          "@type": "html",
+          "value": "Tradicional templo que alberga al Divino Niño del Milagro, imagen venerada desde su aparición en una hostia consagrada los días 2 de junio y 22 de julio de 1649. Actualmente, se impulsa el reconocimiento por el Vaticano como Ciudad Eucarística de América y del mundo."
+        },
+        "route": 1,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-FFD600",
+        "icon": "images/icon-1.png",
+        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-santa-maria-magdalena"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.84188,
+          -6.77377,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Capilla Santa Verónica (En proceso de restauración)",
+        "description": {
+          "@type": "html",
+          "value": "Declarado Patrimonio Cultural de la ciudad de Chiclayo, inaugurada en el año 1865 y declarada Monumento Histórico Nacional en el año 1987 (Ley N° 28296), tiene sus orígenes en las ramadas o capillas doctrinales que servían para misas de difuntos y celebraciones de las comunidades del Cinto y Collique, asociadas con la cultura Lambayeque."
+        },
+        "route": 1,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-FFD600",
         "icon": "images/icon-1.png"
       }
     },
@@ -22,115 +119,44 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [-79.8692308, -6.7908542, 0]
-      },
-      "properties": {
-        "name": "Santuario Virgen de la Paz",
-        "description": {
-          "@type": "html",
-          "value": "Santuario mariano y convento conocido por su devoción y espacios de retiro espiritual; sede de peregrinaciones locales.<br>Cel: 957 615 070<br>Urb. El Santuario S/N, Chiclayo"
-        },
-        "styleUrl": "#icon-1670-FFD600",
-        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/santuario-virgen-de-la-paz",
-        "icon": "images/icon-1.png"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-79.8714769, -6.877873, 0]
-      },
-      "properties": {
-        "name": "Iglesia San Pedro",
-        "description": {
-          "@type": "html",
-          "value": "Iglesia matriz de Monsefú, centro de la vida religiosa y cultural del distrito, famosa por sus festividades patronales.<br>Cel: 975 560 978<br>Plaza de Armas, Monsefú"
-        },
-        "styleUrl": "#icon-1670-FFD600",
-        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-san-pedro",
-        "icon": "images/icon-1.png"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-79.8624119, -6.906896, 0]
-      },
-      "properties": {
-        "name": "Iglesia Santa María Magdalena",
-        "description": {
-          "@type": "html",
-          "value": "Templo histórico de Ciudad Eten, conocido por su tradición religiosa y relevancia cultural local.<br>Cel: 951 907 121<br>Plaza de Armas, Ciudad Eten"
-        },
-        "styleUrl": "#icon-1670-FFD600",
-        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/iglesia-santa-maria-magdalena",
-        "icon": "images/icon-1.png"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-79.5848562, -6.9245305, 0]
-      },
-      "properties": {
-        "name": "Convento San Agustín",
-        "description": {
-          "@type": "html",
-          "value": "Convento histórico y patrimonio cultural situado en Zaña; parte de circuitos culturales por la provincia.<br>Zaña, Lambayeque"
-        },
-        "styleUrl": "#icon-1670-FFD600",
-        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/convento-san-agustin",
-        "icon": "images/icon-1.png"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-79.8993648, -6.7051358, 0]
-      },
-      "properties": {
-        "name": "Museo Tumbas Reales Señor de Sipán",
-        "description": {
-          "@type": "html",
-          "value": "Museo piramidal con exhibición de elaborados objetos fúnebres de las Tumbas Reales preíncas de Sipán."
-        },
-        "styleUrl": "#icon-1636-9C27B0",
-        "website": "https://museos.cultura.pe/museos/museo-tumbas-reales-de-sip%C3%A1n",
-        "icon": "images/icon-2.png"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-79.9038359, -6.704192, 0]
-      },
-      "properties": {
-        "name": "Museo Arqueológico Nacional Bruning",
-        "description": "https://museos.cultura.pe/museos/museo-arqueol%c3%b3gico-nacional-br%c3%bcning",
-        "styleUrl": "#icon-1636-9C27B0",
-        "website": "https://museos.cultura.pe/museos/museo-arqueol%c3%b3gico-nacional-br%c3%bcning",
-        "icon": "images/icon-2.png"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [-79.9379367, -6.8402206, 0]
+        "coordinates": [
+          -79.93791,
+          -6.83915,
+          0
+        ]
       },
       "properties": {
         "name": "Playa Pimentel",
         "description": {
           "@type": "html",
-          "value": "Ubicada a solo 11 kilómetros (20 minutos) del centro de la ciudad, destaca por su extenso malecón, su histórico muelle y sus tradicionales \"caballitos de totora\". Es el lugar ideal para comer un buen ceviche frente al mar y disfrutar de hermosos atardeceres."
+          "value": "Hermoso balneario que combina tradición, historia y naturaleza. Entre sus principales atractivos destacan el emblemático muelle de Pimentel, uno de los más largos del Perú, los tradicionales caballitos de totora, las populares tablas de surf y una espectacular vista al atardecer y la puesta de sol."
         },
+        "route": 1,
+        "category": "playa",
         "styleUrl": "#icon-1681-0288D1",
-        "website": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=274",
+        "icon": "images/icon-3.png",
+        "website": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=274"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.92483,
+          -6.88502,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Playa Santa Rosa",
+        "description": {
+          "@type": "html",
+          "value": "Atractivo destino turístico lleno de encanto y tradición. Su muelle artesanal, las faenas de pesca artesanal y el movimiento de coloridas embarcaciones brindan una experiencia auténtica junto al mar, sus coloridas embarcaciones crean un paisaje único y pintoresco."
+        },
+        "route": 1,
+        "category": "playa",
+        "styleUrl": "#icon-1681-0288D1",
         "icon": "images/icon-3.png"
       }
     },
@@ -138,68 +164,334 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [-79.8691649, -6.9280741, 0]
+        "coordinates": [
+          -79.78815,
+          -6.6397,
+          0
+        ]
       },
       "properties": {
-        "name": "Playa Puerto Eten",
+        "name": "Iglesia Santa Lucía - Ferreñafe",
         "description": {
           "@type": "html",
-          "value": "Su playa, de arena suave y mar sereno, invita a la calma y al disfrute del paisaje."
+          "value": "Construida entre los siglos XVII y XVIII, templo de estilo barroco colonial es joya histórica del norte peruano. Cada 13 de diciembre, miles de fieles acuden a honrar a Santa Lucía, patrona de los ciegos, en una festividad de profunda devoción y tradición."
         },
-        "styleUrl": "#icon-1681-0288D1",
-        "website": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=3744",
-        "icon": "images/icon-3.png"
+        "route": 2,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-81D4FA",
+        "icon": "images/icon-1.png"
       }
     },
     {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [-79.3789531, -6.6785375, 0]
+        "coordinates": [
+          -79.85528,
+          -6.47417,
+          0
+        ]
       },
       "properties": {
-        "name": "Área de Conservación Privada Chaparrí",
+        "name": "Iglesia San Juan Bautista - Íllimo",
         "description": {
           "@type": "html",
-          "value": "Un santuario de la biodiversidad en el norte de Perú, que alberga una gran variedad de especies únicas en su entorno natural."
+          "value": "Templo colonial del siglo XVIII, considerado el corazón espiritual de Íllimo. Fue edificado en 1547 y cada 24 de junio celebra a su santo patrono con procesiones, ceremonias religiosas y tradiciones que reflejan siglos de fe e identidad cultural del pueblo."
         },
-        "styleUrl": "#icon-1720-7CB342",
-        "website": "https://www.peru.travel/es/atractivos/reserva-ecologica-chaparri",
-        "icon": "images/icon-4.png"
+        "route": 2,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-81D4FA",
+        "icon": "images/icon-1.png"
       }
     },
-    {
-  "type": "Feature",
-  "geometry": {
-    "type": "Point",
-    "coordinates": [-79.8477123, -6.5106428, 0]
-  },
-  "properties": {
-    "name": "Complejo Arqueológico Pirámides de Túcume",
-    "description": {
-      "@type": "html",
-      "value": "Impresionante centro ceremonial de la cultura Sicán y Chimú. Alberga 26 pirámides de adobe, el famoso Cerro La Raya y un museo de sitio interactivo."
-    },
-    "styleUrl": "#icon-1505-E65100",
-    "website": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=3792",
-    "icon": "images/icon-arqueologia.png"
-  }
-},
     {
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [-79.7736323, -6.4851109, 0]
+        "coordinates": [
+          -79.77843,
+          -6.48984,
+          0
+        ]
       },
       "properties": {
-        "name": "Bosque de Pómac",
+        "name": "Santuario Histórico Bosque de Pómac",
         "description": {
           "@type": "html",
-          "value": "Es considerado el «Bosque geológico más grande y alto del mundo» y es una de las maravillas del Perú."
+          "value": "Joya natural y cultural ubicada en el ecosistema del bosque seco más extenso, uno de los más singulares del mundo. Cuenta con la mayor concentración de algarrobos y 36 huacas, como Huaca El Oro, donde se halló en 1987 al Señor de Sicán, gobernante de la cultura Lambayeque. Actualmente el recurso turístico cuenta con jerarquía 4."
         },
+        "route": 2,
+        "category": "naturaleza",
         "styleUrl": "#icon-1720-7CB342",
-        "website": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=279",
-        "icon": "images/icon-4.png"
+        "icon": "images/icon-4.png",
+        "website": "https://consultasenlinea.mincetur.gob.pe/fichaInventario/index.aspx?cod_Ficha=279"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.78608,
+          -6.62398,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Museo Nacional de Sicán",
+        "description": {
+          "@type": "html",
+          "value": "Museo que conserva objetos arqueológicos que provienen de excavaciones científicas. Aquí se exhibe parte del patrimonio arqueológico e instrumental, extraído principalmente del área de Batangrande y los objetos hallados en Huaca El Oro, que pertenecen a la cultura Lambayeque."
+        },
+        "route": 2,
+        "category": "museo",
+        "styleUrl": "#icon-1636-9C27B0",
+        "icon": "images/icon-2.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.90377,
+          -6.70419,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Museo Arqueológico Nacional Brüning",
+        "description": {
+          "@type": "html",
+          "value": "Ubicado en la ciudad de Lambayeque, inaugurado el 10 de Julio de 1921. Alberga las principales piezas de culturas de la costa norte del Perú, y expone las evidencias y representaciones de la tumba de la Sacerdotisa de Chornancap (cultura Lambayeque)."
+        },
+        "route": 3,
+        "category": "museo",
+        "styleUrl": "#icon-1636-9C27B0",
+        "icon": "images/icon-2.png",
+        "website": "https://museos.cultura.pe/museos/museo-arqueol%c3%b3gico-nacional-br%c3%bcning"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.83352,
+          -6.22858,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Iglesia San Pablo - Pacora",
+        "description": {
+          "@type": "html",
+          "value": "Su construcción original data de la época Colonial, específicamente en el año 1925, aunque su vinculación con la historia religiosa del lugar se remonta al siglo XVI, cuando San Pablo fue entronizado como patrono del pueblo."
+        },
+        "route": 3,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-B39DDB",
+        "icon": "images/icon-1.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.74538,
+          -5.98788,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Iglesia Santo Domingo - Olmos",
+        "description": {
+          "@type": "html",
+          "value": "Hermoso templo colonial que resguarda a la venerada Cruz del Cerro Chalpón de Olmos; construido en 1860 como símbolo de fe junto a la Cruz de Motupe. Fue demolido en el año 2017 a efectos del fenómeno de El Niño y reconstruido en el 2022, por iniciativa del actual Papa León XIV."
+        },
+        "route": 3,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-B39DDB",
+        "icon": "images/icon-1.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.69722,
+          -6.02722,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Santuario Cruz de Chalpón - Olmos",
+        "description": {
+          "@type": "html",
+          "value": "Importante centro de peregrinación del norte del Perú. Este lugar no solo es testigo de una fervorosa tradición religiosa centenaria, sino también un paraíso natural que invita a la aventura y a la reflexión espiritual. Este Santuario alberga a la milagrosa Cruz de Chalpón de Olmos, encontrada un 25 de agosto de 1944, que También fue construida por el fraile franciscano Juan Agustín de Abad."
+        },
+        "route": 3,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-B39DDB",
+        "icon": "images/icon-1.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.89932,
+          -6.70504,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Museo Tumbas Reales de Sipán",
+        "description": {
+          "@type": "html",
+          "value": "Imponente construcción en forma de pirámide trunca que alberga los tesoros del Viejo Señor de Sipán y del Señor de Sipán; gobernantes de la cultura Mochica, uno de los hallazgos arqueológicos más importantes de América Latina. Considerado entre los 10 mejores museos del mundo y el mejor de América Latina."
+        },
+        "route": 3,
+        "category": "museo",
+        "styleUrl": "#icon-1636-9C27B0",
+        "icon": "images/icon-2.png",
+        "website": "https://museos.cultura.pe/museos/museo-tumbas-reales-de-sip%C3%A1n"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.9062,
+          -6.70353,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Iglesia San Pedro - Lambayeque",
+        "description": {
+          "@type": "html",
+          "value": "Templo colonial construido en el siglo XVII, de gran valor religioso y arquitectónico. Es uno de los principales referentes espirituales de la región, en honor al apóstol San Pedro."
+        },
+        "route": 3,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-B39DDB",
+        "icon": "images/icon-1.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.735,
+          -6.0833,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Santuario Cruz de Chalpón - Motupe",
+        "description": {
+          "@type": "html",
+          "value": "Lugar donde se encuentra la Santísima Cruz de Motupe. Es uno de los principales lugares de peregrinación multitudinario en el norte peruano, especialmente durante su fiesta de medio año en febrero y de año en agosto, donde ciento de miles de devotos durante todo el año, visitan de diferentes partes del país y del mundo. Fue hallada el 5 de agosto de 1868 en una gruta dentro de la ladera del cerro Chalpón. Fue construida por el fraile franciscano Juan Agustín de Abad."
+        },
+        "route": 3,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-B39DDB",
+        "icon": "images/icon-1.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.71705,
+          -6.15398,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Iglesia San Julián - Motupe",
+        "description": {
+          "@type": "html",
+          "value": "Construida en el siglo XVIII, es uno de los templos más emblemáticos del norte del Perú. Su arquitectura presenta una fusión singular de estilos gótico y barroco antiguo. En su interior se encuentra la capilla de la Cruz de Motupe."
+        },
+        "route": 3,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-B39DDB",
+        "icon": "images/icon-1.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.58356,
+          -6.92283,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Convento San Agustín - Capilla Sto. Toribio de Mogrovejo - Zaña",
+        "description": {
+          "@type": "html",
+          "value": "El Convento San Agustín de Zaña, fundado en 1584 por Fray Alonso García, destacó por su arquitectura con dos patios y una iglesia de gran importancia, aunque fue afectado por el fenómeno de El Niño en 1720. Muy cerca se ubica la Capilla Santo Toribio de Mogrovejo, construida en 1906 en el lugar donde el santo falleció. Fue el segundo arzobispo de Lima, y es recordado por su defensa de los indígenas."
+        },
+        "route": 4,
+        "category": "iglesia",
+        "styleUrl": "#icon-1670-FFAB91",
+        "icon": "images/icon-1.png",
+        "website": "https://www.munichiclayo.gob.pe/ruta_papa/view/atractivos/convento-san-agustin"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.60032,
+          -6.79966,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Museo de Sitio Huaca Rajada - Sipán",
+        "description": {
+          "@type": "html",
+          "value": "Inaugurado el 29 de enero de 2009. Alberga ornamentos y joyas encontradas durante una excavación arqueológica en el 2007. Asimismo cuenta con información de las culturas Lambayeque y Chimú."
+        },
+        "route": 4,
+        "category": "arqueologia",
+        "styleUrl": "#icon-1505-E65100",
+        "icon": "images/icon-arqueologia.png"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -79.60184,
+          -6.80126,
+          0
+        ]
+      },
+      "properties": {
+        "name": "Complejo Arqueológico Huaca Rajada - Sipán",
+        "description": {
+          "@type": "html",
+          "value": "En 1987 se realiza un importante descubrimiento, se encontró la tumba del Señor de Sipán, un gobernante mochica, acompañado de su séquito conformado de 8 personas. Se recolectaron alrededor de 600 pertenencias en su tumba, en la que destacan impresionantes ornamentos de oro, plata, turquesa y spondylus, un tipo de concha de mar con la que se confeccionaban piezas artísticas."
+        },
+        "route": 4,
+        "category": "arqueologia",
+        "styleUrl": "#icon-1505-E65100",
+        "icon": "images/icon-arqueologia.png"
       }
     }
   ]
