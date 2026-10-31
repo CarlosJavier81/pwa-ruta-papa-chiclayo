@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import mapaRuta from '@/mapa-ruta.json';
 
 type MapPointCategory = 'iglesia' | 'museo' | 'playa' | 'naturaleza' | 'arqueologia';
+type RouteNumber = 1 | 2 | 3 | 4;
 
 interface GeoJSONDescription {
   '@type': string;
@@ -15,8 +16,8 @@ interface GeoJSONProperties {
   description: GeoJSONDescription | string;
   styleUrl: string;
   icon: string;
-  route?: number;
-  category?: MapPointCategory;
+  route: RouteNumber;
+  category: MapPointCategory;
   website?: string;
   facebook?: string;
   instagram?: string;
@@ -36,6 +37,7 @@ interface GeoJSONCollection {
 interface MarkerData {
   id: string;
   name: string;
+  route: RouteNumber;
   category: MapPointCategory;
   coordinates: [number, number];
   marker: L.Marker;
@@ -51,6 +53,13 @@ const categoryConfig: Record<MapPointCategory, { label: string; color: string; e
   arqueologia: { label: 'Zonas Arqueológicas', color: '#E65100', emoji: '🏺' },
 };
 
+const routeConfig: Record<RouteNumber, { label: string; color: string; subtitle: string }> = {
+  1: { label: 'Ruta 1: Circuito Sur y Costa', color: '#FFD600', subtitle: 'Iglesias y Playas' },
+  2: { label: 'Ruta 2: Circuito Norte-Centro', color: '#81D4FA', subtitle: 'Templos, Bosque y Sicán' },
+  3: { label: 'Ruta 3: Grandes Santuarios y Museos', color: '#B39DDB', subtitle: 'Tumbas Reales y Peregrinaje' },
+  4: { label: 'Ruta 4: Zaña y Huaca Rajada', color: '#FFAB91', subtitle: 'Historia y Arqueología' },
+};
+
 function categoryFromStyle(styleUrl: string): MapPointCategory {
   if (styleUrl.includes('1670')) return 'iglesia';
   if (styleUrl.includes('1636')) return 'museo';
@@ -60,7 +69,6 @@ function categoryFromStyle(styleUrl: string): MapPointCategory {
   return 'iglesia';
 }
 
-// Función para extraer el color Hexadecimal directamente de styleUrl o usar el predeterminado de la categoría
 function getMarkerColor(styleUrl: string, category: MapPointCategory): string {
   const match = styleUrl.match(/#icon-\d+-([A-Fa-f0-9]{6})/);
   if (match && match[1]) {
@@ -110,10 +118,8 @@ export default function MapView() {
   const userMarkerRef = useRef<L.Marker | null>(null);
 
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
-  const [activeCats, setActiveCats] = useState<Set<MapPointCategory>>(
-    new Set(Object.keys(categoryConfig) as MapPointCategory[])
-  );
-  const [expandedCat, setExpandedCat] = useState<MapPointCategory | null>(null);
+  const [activeRoutes, setActiveRoutes] = useState<Set<RouteNumber>>(new Set([1, 2, 3, 4]));
+  const [expandedRoute, setExpandedRoute] = useState<RouteNumber | null>(null);
   const [showLegend, setShowLegend] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
 
@@ -184,6 +190,7 @@ export default function MapView() {
       const [lng, lat] = f.geometry.coordinates;
       const cat = categoryFromStyle(f.properties.styleUrl);
       const cfg = categoryConfig[cat];
+      const routeNum = f.properties.route || 1;
       
       const itemColor = getMarkerColor(f.properties.styleUrl, cat);
       const m = L.marker([lat, lng], { icon: makeIcon(itemColor, cfg.emoji) }).addTo(map);
@@ -206,6 +213,7 @@ export default function MapView() {
       return {
         id: `marker-${idx}`,
         name: f.properties.name,
+        route: routeNum,
         category: cat,
         coordinates: [lat, lng],
         marker: m,
@@ -239,7 +247,7 @@ export default function MapView() {
     data.features.forEach((f, idx) => {
       const item = markersRef.current[idx];
       if (item && item.marker) {
-        const cat = item.category;
+        const cat = categoryFromStyle(f.properties.styleUrl);
         const cfg = categoryConfig[cat];
         const itemColor = getMarkerColor(f.properties.styleUrl, cat);
         item.marker.setPopupContent(
@@ -262,40 +270,39 @@ export default function MapView() {
 
   useEffect(() => {
     if (!mapRef.current) return;
-    const active = activeCats;
-    markersRef.current.forEach(({ marker, category }) => {
-      if (active.has(category)) {
+    markersRef.current.forEach(({ marker, route }) => {
+      if (activeRoutes.has(route)) {
         if (!mapRef.current!.hasLayer(marker)) marker.addTo(mapRef.current!);
       } else {
         mapRef.current!.removeLayer(marker);
       }
     });
-  }, [activeCats]);
+  }, [activeRoutes]);
 
-  const toggleCategory = (c: MapPointCategory) => {
-    setActiveCats((prev) => {
+  const toggleRoute = (r: RouteNumber) => {
+    setActiveRoutes((prev) => {
       const next = new Set(prev);
-      if (next.has(c)) {
-        next.delete(c);
-        if (expandedCat === c) setExpandedCat(null);
+      if (next.has(r)) {
+        next.delete(r);
+        if (expandedRoute === r) setExpandedRoute(null);
       } else {
-        next.add(c);
-        setExpandedCat(c);
+        next.add(r);
+        setExpandedRoute(r);
       }
       return next;
     });
   };
 
-  const toggleExpand = (e: React.MouseEvent, c: MapPointCategory) => {
+  const toggleExpandRoute = (e: React.MouseEvent, r: RouteNumber) => {
     e.stopPropagation();
-    setExpandedCat((prev) => (prev === c ? null : c));
+    setExpandedRoute((prev) => (prev === r ? null : r));
   };
 
-  const selectPoint = (item: MarkerData) => {
+  const selectPointByRoute = (item: MarkerData) => {
     if (!mapRef.current) return;
 
-    if (!activeCats.has(item.category)) {
-      setActiveCats((prev) => new Set(prev).add(item.category));
+    if (!activeRoutes.has(item.route)) {
+      setActiveRoutes((prev) => new Set(prev).add(item.route));
     }
 
     mapRef.current.flyTo(item.coordinates, 16, { duration: 1.2 });
@@ -389,11 +396,11 @@ export default function MapView() {
         </div>
       </div>
 
-      {/* Panel Flotante de Filtros */}
+      {/* Panel Flotante de Filtros por Rutas */}
       {showLegend && (
-        <div className="absolute bottom-48 right-4 left-4 sm:left-auto z-[500] bg-white p-3.5 rounded-2xl shadow-xl border border-navy-100 sm:max-w-[280px] max-h-[55vh] flex flex-col">
+        <div className="absolute bottom-48 right-4 left-4 sm:left-auto z-[500] bg-white p-3.5 rounded-2xl shadow-xl border border-navy-100 sm:max-w-[310px] max-h-[60vh] flex flex-col">
           <div className="flex items-center justify-between mb-2 pb-1.5 border-b border-gray-100 flex-shrink-0">
-            <span className="text-xs font-bold text-navy-600 uppercase tracking-wider">Filtros y Puntos</span>
+            <span className="text-xs font-bold text-navy-600 uppercase tracking-wider">Filtrar por Rutas</span>
             <button
               onClick={() => setShowLegend(false)}
               className="text-gray-400 hover:text-gray-600 text-xs font-bold px-1"
@@ -403,34 +410,38 @@ export default function MapView() {
           </div>
 
           <div className="flex flex-col gap-2 overflow-y-auto pr-1">
-            {(Object.entries(categoryConfig) as [MapPointCategory, { label: string; color: string }][]).map(
-              ([key, cfg]) => {
-                const isActive = activeCats.has(key);
-                const isExpanded = expandedCat === key;
-                const categoryItems = markersRef.current.filter((m) => m.category === key);
+            {([1, 2, 3, 4] as RouteNumber[]).map((routeNum) => {
+              const cfg = routeConfig[routeNum];
+              const isActive = activeRoutes.has(routeNum);
+              const isExpanded = expandedRoute === routeNum;
+              const routeItems = markersRef.current.filter((m) => m.route === routeNum);
 
-                return (
-                  <div key={key} className="flex flex-col rounded-lg border border-gray-200 overflow-hidden bg-white">
-                    <div
-                      onClick={() => toggleCategory(key)}
-                      className={`flex items-center justify-between px-2.5 py-2 cursor-pointer transition ${
-                        isActive ? 'bg-navy-50/60' : 'bg-gray-50 opacity-60'
-                      }`}
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span
-                          className="w-3 h-3 rounded-full border border-white shadow-sm flex-shrink-0"
-                          style={{ background: cfg.color }}
-                        />
-                        <span className="text-xs font-semibold text-navy-600 truncate">{cfg.label}</span>
-                        <span className="text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.2 rounded-full font-bold">
-                          {categoryItems.length}
-                        </span>
+              return (
+                <div key={routeNum} className="flex flex-col rounded-lg border border-gray-200 overflow-hidden bg-white">
+                  <div
+                    onClick={() => toggleRoute(routeNum)}
+                    className={`flex items-center justify-between px-2.5 py-2 cursor-pointer transition ${
+                      isActive ? 'bg-navy-50/60' : 'bg-gray-50 opacity-60'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span
+                        className="w-3 h-3 rounded-full border border-white shadow-sm flex-shrink-0"
+                        style={{ background: cfg.color }}
+                      />
+                      <div className="min-w-0">
+                        <span className="text-xs font-semibold text-navy-600 block truncate">{cfg.label}</span>
+                        <span className="text-[10px] text-gray-500 block truncate">{cfg.subtitle}</span>
                       </div>
+                    </div>
 
-                      {categoryItems.length > 0 && (
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      <span className="text-[10px] bg-gray-200 text-gray-600 px-1.5 py-0.5 rounded-full font-bold">
+                        {routeItems.length}
+                      </span>
+                      {routeItems.length > 0 && (
                         <button
-                          onClick={(e) => toggleExpand(e, key)}
+                          onClick={(e) => toggleExpandRoute(e, routeNum)}
                           className="text-gray-400 hover:text-navy-600 px-1 text-xs font-bold"
                           aria-label="Desplegar lista"
                         >
@@ -438,25 +449,25 @@ export default function MapView() {
                         </button>
                       )}
                     </div>
-
-                    {isExpanded && isActive && (
-                      <div className="flex flex-col bg-white border-t border-gray-100 py-1">
-                        {categoryItems.map((item) => (
-                          <button
-                            key={item.id}
-                            onClick={() => selectPoint(item)}
-                            className="text-left px-3 py-1.5 text-xs text-gray-700 hover:bg-gold-100/50 hover:text-navy-600 transition flex items-center justify-between border-b border-gray-50 last:border-none"
-                          >
-                            <span className="truncate pr-2">• {item.name}</span>
-                            <span className="text-[10px] text-gold-600 font-bold">Ver →</span>
-                          </button>
-                        ))}
-                      </div>
-                    )}
                   </div>
-                );
-              }
-            )}
+
+                  {isExpanded && isActive && (
+                    <div className="flex flex-col bg-white border-t border-gray-100 py-1">
+                      {routeItems.map((item) => (
+                        <button
+                          key={item.id}
+                          onClick={() => selectPointByRoute(item)}
+                          className="text-left px-3 py-1.5 text-xs text-gray-700 hover:bg-gold-100/50 hover:text-navy-600 transition flex items-center justify-between border-b border-gray-50 last:border-none"
+                        >
+                          <span className="truncate pr-2">• {item.name}</span>
+                          <span className="text-[10px] text-gold-600 font-bold flex-shrink-0">Ver →</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -469,7 +480,7 @@ export default function MapView() {
             showLegend ? 'bg-navy-500 text-white' : 'bg-gold-500 text-navy-600'
           }`}
         >
-          <span className="text-sm leading-none">☰</span> Filtros
+          <span className="text-sm leading-none">☰</span> Rutas
         </button>
 
         <button
