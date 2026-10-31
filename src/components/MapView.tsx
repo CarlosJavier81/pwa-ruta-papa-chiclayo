@@ -15,9 +15,11 @@ interface GeoJSONProperties {
   description: GeoJSONDescription | string;
   styleUrl: string;
   icon: string;
-  website?: string;  // 👈 Nuevo opcional
-  facebook?: string; // 👈 Nuevo opcional
-  instagram?: string; // 👈 Nuevo opcional
+  route?: number;
+  category?: MapPointCategory;
+  website?: string;
+  facebook?: string;
+  instagram?: string;
 }
 
 interface GeoJSONFeature {
@@ -58,6 +60,15 @@ function categoryFromStyle(styleUrl: string): MapPointCategory {
   return 'iglesia';
 }
 
+// Función para extraer el color Hexadecimal directamente de styleUrl o usar el predeterminado de la categoría
+function getMarkerColor(styleUrl: string, category: MapPointCategory): string {
+  const match = styleUrl.match(/#icon-\d+-([A-Fa-f0-9]{6})/);
+  if (match && match[1]) {
+    return `#${match[1]}`;
+  }
+  return categoryConfig[category].color;
+}
+
 function descriptionText(desc: GeoJSONDescription | string): string {
   if (typeof desc === 'string') return desc;
   return desc.value;
@@ -85,7 +96,6 @@ function makeUserIcon() {
   });
 }
 
-// Generador de enlaces para apps externas de GPS
 function buildGpsUrls(destLat: number, destLng: number, userCoords?: [number, number] | null) {
   const originParam = userCoords ? `&origin=${userCoords[0]},${userCoords[1]}` : '';
   const gmaps = `https://www.google.com/maps/dir/?api=1${originParam}&destination=${destLat},${destLng}&travelmode=driving`;
@@ -107,44 +117,52 @@ export default function MapView() {
   const [showLegend, setShowLegend] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
 
-  // Función para construir la tarjeta HTML con botones de navegación GPS
-  const createPopupContent = (name: string, label: string, color: string, desc: string, lat: number, lng: number, userPos?: [number, number] | null,website?: string,
-  facebook?: string, instagram?: string) => {
+  const createPopupContent = (
+    name: string,
+    label: string,
+    color: string,
+    desc: string,
+    lat: number,
+    lng: number,
+    userPos?: [number, number] | null,
+    website?: string,
+    facebook?: string,
+    instagram?: string
+  ) => {
     const { gmaps, waze } = buildGpsUrls(lat, lng, userPos);
     
-    // Generar botones de links oficiales solo si existen
-  let linksHtml = '';
-  if (website || facebook || instagram) {
-    linksHtml = `
-      <div style="border-top:1px solid #E2E8F0;margin-top:8px;padding-top:6px;display:flex;align-items:center;gap:6px;">
-        <span style="font-size:10px;font-weight:700;color:#718096;text-transform:uppercase;">Info:</span>
-        ${website ? `<a href="${website}" target="_blank" rel="noopener noreferrer" style="background:#F1F5F9;color:#1E293B;padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:3px;">🌐 Web</a>` : ''}
-        ${facebook ? `<a href="${facebook}" target="_blank" rel="noopener noreferrer" style="background:#E0F2FE;color:#0369A1;padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-decoration:none;">📘 FB</a>` : ''}
-        ${instagram ? `<a href="${instagram}" target="_blank" rel="noopener noreferrer" style="background:#FCE7F3;color:#BE185D;padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-decoration:none;">📷 IG</a>` : ''}
-      </div>
-    `;
-  }
+    let linksHtml = '';
+    if (website || facebook || instagram) {
+      linksHtml = `
+        <div style="border-top:1px solid #E2E8F0;margin-top:8px;padding-top:6px;display:flex;align-items:center;gap:6px;">
+          <span style="font-size:10px;font-weight:700;color:#718096;text-transform:uppercase;">Info:</span>
+          ${website ? `<a href="${website}" target="_blank" rel="noopener noreferrer" style="background:#F1F5F9;color:#1E293B;padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-decoration:none;display:flex;align-items:center;gap:3px;">🌐 Web</a>` : ''}
+          ${facebook ? `<a href="${facebook}" target="_blank" rel="noopener noreferrer" style="background:#E0F2FE;color:#0369A1;padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-decoration:none;">📘 FB</a>` : ''}
+          ${instagram ? `<a href="${instagram}" target="_blank" rel="noopener noreferrer" style="background:#FCE7F3;color:#BE185D;padding:4px 8px;border-radius:4px;font-size:11px;font-weight:600;text-decoration:none;">📷 IG</a>` : ''}
+        </div>
+      `;
+    }
 
-  return `<div style="font-family:Inter,sans-serif;min-width:210px;max-width:260px;">
-    <div style="font-weight:700;color:#1D3557;font-size:14px;margin-bottom:4px;">${name}</div>
-    <div style="font-size:11px;color:${color};text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:600;">${label}</div>
-    <div style="font-size:12px;color:#4A5568;line-height:1.4;margin-bottom:12px;">${desc}</div>
-    
-    ${linksHtml}
+    return `<div style="font-family:Inter,sans-serif;min-width:210px;max-width:260px;">
+      <div style="font-weight:700;color:#1D3557;font-size:14px;margin-bottom:4px;">${name}</div>
+      <div style="font-size:11px;color:${color};text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;font-weight:600;">${label}</div>
+      <div style="font-size:12px;color:#4A5568;line-height:1.4;margin-bottom:12px;">${desc}</div>
+      
+      ${linksHtml}
 
-    <div style="border-top:1px solid #E2E8F0;margin-top:8px;padding-top:8px;display:flex;flex-direction:column;gap:6px;">
-      <span style="font-size:10px;font-weight:700;color:#718096;text-transform:uppercase;">Cómo llegar:</span>
-      <div style="display:flex;gap:6px;">
-        <a href="${gmaps}" target="_blank" rel="noopener noreferrer" style="flex:1;background:#2563EB;color:#fff;text-align:center;padding:6px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;">
-          <span>🗺️</span> Google Maps
-        </a>
-        <a href="${waze}" target="_blank" rel="noopener noreferrer" style="background:#33CCFF;color:#1A202C;text-align:center;padding:6px 8px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;">
-          <span>🚗</span> Waze
-        </a>
+      <div style="border-top:1px solid #E2E8F0;margin-top:8px;padding-top:8px;display:flex;flex-direction:column;gap:6px;">
+        <span style="font-size:10px;font-weight:700;color:#718096;text-transform:uppercase;">Cómo llegar:</span>
+        <div style="display:flex;gap:6px;">
+          <a href="${gmaps}" target="_blank" rel="noopener noreferrer" style="flex:1;background:#2563EB;color:#fff;text-align:center;padding:6px 8px;border-radius:6px;font-size:11px;font-weight:600;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;">
+            <span>🗺️</span> Google Maps
+          </a>
+          <a href="${waze}" target="_blank" rel="noopener noreferrer" style="background:#33CCFF;color:#1A202C;text-align:center;padding:6px 8px;border-radius:6px;font-size:11px;font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:4px;">
+            <span>🚗</span> Waze
+          </a>
+        </div>
       </div>
-    </div>
-  </div>`;
-};
+    </div>`;
+  };
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -166,20 +184,22 @@ export default function MapView() {
       const [lng, lat] = f.geometry.coordinates;
       const cat = categoryFromStyle(f.properties.styleUrl);
       const cfg = categoryConfig[cat];
-      const m = L.marker([lat, lng], { icon: makeIcon(cfg.color, cfg.emoji) }).addTo(map);
+      
+      const itemColor = getMarkerColor(f.properties.styleUrl, cat);
+      const m = L.marker([lat, lng], { icon: makeIcon(itemColor, cfg.emoji) }).addTo(map);
 
       m.bindPopup(
         createPopupContent(
           f.properties.name,
           cfg.label,
-          cfg.color,
+          itemColor,
           descriptionText(f.properties.description),
           lat,
           lng,
           userLocation,
-          f.properties.website,   // 👈 Pasar website
-          f.properties.facebook,  // 👈 Pasar facebook
-          f.properties.instagram  // 👈 Pasar instagram
+          f.properties.website,
+          f.properties.facebook,
+          f.properties.instagram
         )
       );
 
@@ -214,7 +234,6 @@ export default function MapView() {
     };
   }, []);
 
-  // Actualizar el HTML de los popups si la ubicación del usuario cambia
   useEffect(() => {
     if (!userLocation) return;
     data.features.forEach((f, idx) => {
@@ -222,15 +241,19 @@ export default function MapView() {
       if (item && item.marker) {
         const cat = item.category;
         const cfg = categoryConfig[cat];
+        const itemColor = getMarkerColor(f.properties.styleUrl, cat);
         item.marker.setPopupContent(
           createPopupContent(
             f.properties.name,
             cfg.label,
-            cfg.color,
+            itemColor,
             descriptionText(f.properties.description),
             item.coordinates[0],
             item.coordinates[1],
-            userLocation
+            userLocation,
+            f.properties.website,
+            f.properties.facebook,
+            f.properties.instagram
           )
         );
       }
