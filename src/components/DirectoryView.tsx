@@ -26,9 +26,11 @@ function Stars({ rating }: { rating: number }) {
 }
 
 function DirectoryCard({ entry }: { entry: (typeof directoryEntries)[number] }) {
+  /* Variable de WhatsApp omitida temporalmente
   const waLink = `https://wa.me/51${entry.whatsapp}?text=${encodeURIComponent(
     `Hola, vengo desde la app "Ruta del Papa - Chiclayo" y quisiera información sobre: ${entry.name}.`
   )}`;
+  */
 
   return (
     <div className="bg-white rounded-2xl shadow-card border border-navy-50 overflow-hidden">
@@ -64,20 +66,13 @@ function DirectoryCard({ entry }: { entry: (typeof directoryEntries)[number] }) 
         </div>
       </div>
 
+      {/* Botón Llamar a ancho completo (WhatsApp oculto temporalmente) */}
       <div className="flex border-t border-navy-50">
         <a
           href={`tel:${entry.phone}`}
-          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 text-navy-500 text-sm font-semibold active:bg-navy-50 transition"
+          className="w-full flex items-center justify-center gap-1.5 py-3 text-navy-600 text-sm font-bold active:bg-navy-50 transition"
         >
-          <span className="text-base leading-none">📞</span> Llamar
-        </a>
-        <a
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 flex items-center justify-center gap-1.5 py-2.5 bg-[#25D366] text-white text-sm font-semibold active:brightness-90 transition"
-        >
-          <span className="text-base leading-none">💬</span> WhatsApp
+          <span className="text-base leading-none">📞</span> Llamar al establecimiento
         </a>
       </div>
     </div>
