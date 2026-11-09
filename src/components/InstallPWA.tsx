@@ -70,32 +70,39 @@ export default function InstallPWA() {
 
     checkStandalone();
 
-    // 2. Verificar si la app ya fue marcada como instalada en este navegador web (localStorage)
-    const installedFlag = localStorage.getItem('pwa_already_installed');
-    if (installedFlag === 'true') {
-      setIsAlreadyInstalled(true);
-    }
-
-    // 3. Detectar si es un dispositivo iOS (iPhone / iPad)
+    // 2. Detectar si es un dispositivo iOS (iPhone / iPad)
     const userAgent = window.navigator.userAgent.toLowerCase();
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
     setIsIOS(isIosDevice);
 
-    // 4. Revisar si el evento ya fue capturado globalmente
+    // 3. Revisar si el evento ya fue capturado globalmente o si el navegador permite instalarla de nuevo
     if (window.deferredPwaPrompt) {
+      // Si el navegador vuelve a permitir la instalación, limpiamos cualquier falso positivo del localStorage
+      localStorage.removeItem('pwa_already_installed');
+      setIsAlreadyInstalled(false);
       setDeferredPrompt(window.deferredPwaPrompt);
-      sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
+    } else {
+      // Si no hay evento y está marcado en localStorage, mostramos el mensaje de ya instalada
+      const installedFlag = localStorage.getItem('pwa_already_installed');
+      if (installedFlag === 'true') {
+        setIsAlreadyInstalled(true);
+      }
     }
 
-    // 5. Capturar el evento de instalación nativo en Android / Chrome
+    // 4. Capturar el evento de instalación nativo en Android / Chrome
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       window.deferredPwaPrompt = e;
       setDeferredPrompt(e as BeforeInstallPromptEvent);
+      
+      // Si el navegador detecta que se puede instalar, borramos el registro anterior (por si la desinstaló)
+      localStorage.removeItem('pwa_already_installed');
+      setIsAlreadyInstalled(false);
+
       sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
     };
 
-    // 6. Capturar cuando la instalación finaliza con éxito
+    // 5. Capturar cuando la instalación finaliza con éxito
     const handleAppInstalled = () => {
       localStorage.setItem('pwa_already_installed', 'true');
       setIsAlreadyInstalled(true);
@@ -182,7 +189,7 @@ export default function InstallPWA() {
     );
   }
 
-  // SI ESTÁ EN LA WEB Y AÚN NO SE INSTALA: Muestra el botón o guía habitual
+  // SI ESTÁ EN LA WEB Y AÚN NO SE INSTALA (O LA DESINSTALÓ): Muestra el botón o guía habitual
   return (
     <div className="w-full max-w-md mx-auto my-4 px-4">
       {/* Opción A: Botón directo para Android / Chrome / Desktop */}
