@@ -175,7 +175,7 @@ export default function InstallPWA() {
         <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 flex items-center justify-center gap-2.5 shadow-sm">
           <span className="text-xl">✅</span>
           <span className="text-xs font-bold text-emerald-800">
-            La app ya está instalada en la pantalla de inicio de tu celular
+            La app ya está instalada. Búsquela entre sus aplicaciones 📱
           </span>
         </div>
       </div>
