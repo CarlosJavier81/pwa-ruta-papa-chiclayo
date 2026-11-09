@@ -49,30 +49,45 @@ const sendGA4Event = (eventName: string, params: Record<string, any> = {}) => {
 export default function InstallPWA() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
   const [isAlreadyInstalled, setIsAlreadyInstalled] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [isInstalling, setIsInstalling] = useState(false);
 
   useEffect(() => {
-    // 1. Verificar si la app ya fue marcada como instalada en este navegador (localStorage)
+    // 1. Verificar si la app corre como PWA instalada (Standalone)
+    const checkStandalone = () => {
+      const isApp = 
+        window.matchMedia('(display-mode: standalone)').matches || 
+        window.matchMedia('(display-mode: window-controls-overlay)').matches ||
+        (navigator as any).standalone === true ||
+        document.referrer.includes('android-app://');
+
+      if (isApp) {
+        setIsStandalone(true);
+      }
+    };
+
+    checkStandalone();
+
+    // 2. Verificar si la app ya fue marcada como instalada en este navegador web (localStorage)
     const installedFlag = localStorage.getItem('pwa_already_installed');
     if (installedFlag === 'true') {
       setIsAlreadyInstalled(true);
-      return;
     }
 
-    // 2. Detectar si es un dispositivo iOS (iPhone / iPad)
+    // 3. Detectar si es un dispositivo iOS (iPhone / iPad)
     const userAgent = window.navigator.userAgent.toLowerCase();
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
     setIsIOS(isIosDevice);
 
-    // 3. Revisar si el evento ya fue capturado globalmente
+    // 4. Revisar si el evento ya fue capturado globalmente
     if (window.deferredPwaPrompt) {
       setDeferredPrompt(window.deferredPwaPrompt);
       sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
     }
 
-    // 4. Capturar el evento de instalación nativo en Android / Chrome
+    // 5. Capturar el evento de instalación nativo en Android / Chrome
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       window.deferredPwaPrompt = e;
@@ -80,10 +95,10 @@ export default function InstallPWA() {
       sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
     };
 
-    // 5. Capturar cuando la instalación finaliza con éxito
+    // 6. Capturar cuando la instalación finaliza con éxito
     const handleAppInstalled = () => {
-      localStorage.setItem('pwa_already_installed', 'true'); // Guardamos la marca en la web
-      setIsAlreadyInstalled(true); // Cambiamos el estado para mostrar el mensaje en la web
+      localStorage.setItem('pwa_already_installed', 'true');
+      setIsAlreadyInstalled(true);
       
       sendGA4Event('app_install', {
         platform: isIosDevice ? 'ios' : 'android',
@@ -124,7 +139,6 @@ export default function InstallPWA() {
         outcome: choiceResult.outcome 
       });
 
-      // Si el usuario aceptó la instalación en el navegador web
       if (choiceResult.outcome === 'accepted') {
         localStorage.setItem('pwa_already_installed', 'true');
         setIsAlreadyInstalled(true);
@@ -149,21 +163,26 @@ export default function InstallPWA() {
     });
   };
 
-  // SI LA WEB DETECTA QUE YA FUE INSTALADA: Muestra el mensaje en la versión web
+  // SI ESTÁ ABIERTA DENTRO DE LA APP INSTALADA: No muestra nada
+  if (isStandalone) {
+    return null;
+  }
+
+  // SI ESTÁ EN LA WEB Y EL NAVEGADOR RECUERDA QUE YA SE INSTALÓ: Muestra el mensaje en la web
   if (isAlreadyInstalled) {
     return (
       <div className="w-full max-w-md mx-auto my-4 px-4">
         <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 flex items-center justify-center gap-2.5 shadow-sm">
           <span className="text-xl">✅</span>
           <span className="text-xs font-bold text-emerald-800">
-            La app ya está instalada en tu celular
+            La app ya está instalada en la pantalla de inicio de tu celular
           </span>
         </div>
       </div>
     );
   }
 
-  // SI AÚN NO ESTÁ INSTALADA EN ESTE NAVEGADOR WEB: Muestra el botón o guía habitual
+  // SI ESTÁ EN LA WEB Y AÚN NO SE INSTALA: Muestra el botón o guía habitual
   return (
     <div className="w-full max-w-md mx-auto my-4 px-4">
       {/* Opción A: Botón directo para Android / Chrome / Desktop */}
