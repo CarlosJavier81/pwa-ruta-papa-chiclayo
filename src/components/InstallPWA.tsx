@@ -49,45 +49,30 @@ const sendGA4Event = (eventName: string, params: Record<string, any> = {}) => {
 export default function InstallPWA() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [isIOS, setIsIOS] = useState(false);
-  const [isStandalone, setIsStandalone] = useState(false);
+  const [isAlreadyInstalled, setIsAlreadyInstalled] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
   const [isInstalling, setIsInstalling] = useState(false);
 
   useEffect(() => {
-    // 1. Verificar si la app corre como PWA instalada (Standalone)
-    const checkStandalone = () => {
-      const isApp = 
-        window.matchMedia('(display-mode: standalone)').matches || 
-        window.matchMedia('(display-mode: window-controls-overlay)').matches ||
-        (navigator as any).standalone === true ||
-        document.referrer.includes('android-app://');
+    // 1. Verificar si la app ya fue marcada como instalada en este navegador (localStorage)
+    const installedFlag = localStorage.getItem('pwa_already_installed');
+    if (installedFlag === 'true') {
+      setIsAlreadyInstalled(true);
+      return;
+    }
 
-      if (isApp) {
-        setIsStandalone(true);
-      }
-    };
-
-    checkStandalone();
-
-    // 2. Escuchar si cambia el modo display en tiempo real
-    const mediaQuery = window.matchMedia('(display-mode: standalone)');
-    const handleMediaChange = (e: MediaQueryListEvent) => {
-      if (e.matches) setIsStandalone(true);
-    };
-    mediaQuery.addEventListener('change', handleMediaChange);
-
-    // 3. Detectar si es un dispositivo iOS (iPhone / iPad)
+    // 2. Detectar si es un dispositivo iOS (iPhone / iPad)
     const userAgent = window.navigator.userAgent.toLowerCase();
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
     setIsIOS(isIosDevice);
 
-    // 4. Revisar si el evento ya fue capturado globalmente
+    // 3. Revisar si el evento ya fue capturado globalmente
     if (window.deferredPwaPrompt) {
       setDeferredPrompt(window.deferredPwaPrompt);
       sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
     }
 
-    // 5. Capturar el evento de instalación nativo en Android / Chrome
+    // 4. Capturar el evento de instalación nativo en Android / Chrome
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       window.deferredPwaPrompt = e;
@@ -95,9 +80,11 @@ export default function InstallPWA() {
       sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
     };
 
-    // 6. Capturar cuando la instalación finaliza con éxito
+    // 5. Capturar cuando la instalación finaliza con éxito
     const handleAppInstalled = () => {
-      setIsStandalone(true); // Cambia el estado para mostrar la tarjeta de "Ya instalada"
+      localStorage.setItem('pwa_already_installed', 'true'); // Guardamos la marca en la web
+      setIsAlreadyInstalled(true); // Cambiamos el estado para mostrar el mensaje en la web
+      
       sendGA4Event('app_install', {
         platform: isIosDevice ? 'ios' : 'android',
         method: 'native_prompt'
@@ -110,7 +97,6 @@ export default function InstallPWA() {
     window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
-      mediaQuery.removeEventListener('change', handleMediaChange);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
@@ -138,6 +124,12 @@ export default function InstallPWA() {
         outcome: choiceResult.outcome 
       });
 
+      // Si el usuario aceptó la instalación en el navegador web
+      if (choiceResult.outcome === 'accepted') {
+        localStorage.setItem('pwa_already_installed', 'true');
+        setIsAlreadyInstalled(true);
+      }
+
       setDeferredPrompt(null);
       window.deferredPwaPrompt = null;
     } catch (err) {
@@ -157,8 +149,8 @@ export default function InstallPWA() {
     });
   };
 
-  // SI LA APP YA ESTÁ INSTALADA: Muestra la tarjeta de confirmación
-  if (isStandalone) {
+  // SI LA WEB DETECTA QUE YA FUE INSTALADA: Muestra el mensaje en la versión web
+  if (isAlreadyInstalled) {
     return (
       <div className="w-full max-w-md mx-auto my-4 px-4">
         <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 flex items-center justify-center gap-2.5 shadow-sm">
@@ -171,7 +163,7 @@ export default function InstallPWA() {
     );
   }
 
-  // SI AÚN NO ESTÁ INSTALADA: Muestra el botón o guía habitual
+  // SI AÚN NO ESTÁ INSTALADA EN ESTE NAVEGADOR WEB: Muestra el botón o guía habitual
   return (
     <div className="w-full max-w-md mx-auto my-4 px-4">
       {/* Opción A: Botón directo para Android / Chrome / Desktop */}
