@@ -31,7 +31,7 @@ const sendGA4Event = (eventName: string, params: Record<string, any> = {}) => {
 
   const eventPayload = {
     ...params,
-    debug_mode: true // Muestra los eventos al instante en DebugView
+    debug_mode: true
   };
 
   if (typeof (window as any).gtag === 'function') {
@@ -51,42 +51,53 @@ export default function InstallPWA() {
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
-  const [isInstalling, setIsInstalling] = useState(false); // Estado para la animación de carga
+  const [isInstalling, setIsInstalling] = useState(false);
 
   useEffect(() => {
-    // 1. Verificar si la app ya está instalada o abierta en modo standalone
-    const isApp = window.matchMedia('(display-mode: standalone)').matches 
-      || (navigator as any).standalone 
-      || document.referrer.includes('android-app://');
-    
-    if (isApp) {
-      setIsStandalone(true);
-      return;
-    }
+    // 1. Verificar si la app corre como PWA instalada (Standalone)
+    const checkStandalone = () => {
+      const isApp = 
+        window.matchMedia('(display-mode: standalone)').matches || 
+        window.matchMedia('(display-mode: window-controls-overlay)').matches ||
+        (navigator as any).standalone === true ||
+        document.referrer.includes('android-app://');
 
-    // 2. Detectar si es un dispositivo iOS (iPhone / iPad)
+      if (isApp) {
+        setIsStandalone(true);
+      }
+    };
+
+    checkStandalone();
+
+    // 2. Escuchar si cambia el modo display en tiempo real
+    const mediaQuery = window.matchMedia('(display-mode: standalone)');
+    const handleMediaChange = (e: MediaQueryListEvent) => {
+      if (e.matches) setIsStandalone(true);
+    };
+    mediaQuery.addEventListener('change', handleMediaChange);
+
+    // 3. Detectar si es un dispositivo iOS (iPhone / iPad)
     const userAgent = window.navigator.userAgent.toLowerCase();
     const isIosDevice = /iphone|ipad|ipod/.test(userAgent);
     setIsIOS(isIosDevice);
 
-    // 3. Revisar si el evento ya fue capturado globalmente
+    // 4. Revisar si el evento ya fue capturado globalmente
     if (window.deferredPwaPrompt) {
       setDeferredPrompt(window.deferredPwaPrompt);
       sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
     }
 
-    // 4. Capturar el evento de instalación nativo en Android / Chrome
+    // 5. Capturar el evento de instalación nativo en Android / Chrome
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       window.deferredPwaPrompt = e;
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-
-      // Evento GA4: Se mostró el banner/botón de instalación disponible
       sendGA4Event('pwa_install_prompt_shown', { platform: 'android' });
     };
 
-    // 5. Capturar cuando la instalación se completa exitosamente
+    // 6. Capturar cuando la instalación finaliza con éxito
     const handleAppInstalled = () => {
+      setIsStandalone(true); // Cambia el estado para mostrar la tarjeta de "Ya instalada"
       sendGA4Event('app_install', {
         platform: isIosDevice ? 'ios' : 'android',
         method: 'native_prompt'
@@ -99,12 +110,12 @@ export default function InstallPWA() {
     window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
+      mediaQuery.removeEventListener('change', handleMediaChange);
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
-  // Función para activar la instalación en Android / Desktop con estado de carga
   const handleInstallClick = async () => {
     sendGA4Event('pwa_install_click', {
       platform: isIOS ? 'ios' : 'android'
@@ -118,7 +129,7 @@ export default function InstallPWA() {
     }
 
     try {
-      setIsInstalling(true); // Activa el efecto visual de carga
+      setIsInstalling(true);
       await activePrompt.prompt();
 
       const choiceResult = await activePrompt.userChoice;
@@ -132,11 +143,10 @@ export default function InstallPWA() {
     } catch (err) {
       console.error('Error al ejecutar el prompt de instalación:', err);
     } finally {
-      setIsInstalling(false); // Restaura el botón al terminar
+      setIsInstalling(false);
     }
   };
 
-  // Función para rastrear cuando un usuario de iPhone abre la guía
   const handleToggleIOSGuide = () => {
     setShowIOSGuide((prev) => {
       const nextState = !prev;
@@ -147,12 +157,24 @@ export default function InstallPWA() {
     });
   };
 
-  // Si ya está abierta dentro de la App instalada, no mostramos nada
-  if (isStandalone) return null;
+  // SI LA APP YA ESTÁ INSTALADA: Muestra la tarjeta de confirmación
+  if (isStandalone) {
+    return (
+      <div className="w-full max-w-md mx-auto my-4 px-4">
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 flex items-center justify-center gap-2.5 shadow-sm">
+          <span className="text-xl">✅</span>
+          <span className="text-xs font-bold text-emerald-800">
+            La app ya está instalada en tu celular
+          </span>
+        </div>
+      </div>
+    );
+  }
 
+  // SI AÚN NO ESTÁ INSTALADA: Muestra el botón o guía habitual
   return (
     <div className="w-full max-w-md mx-auto my-4 px-4">
-      {/* Opción A: Botón directo para Android / Chrome / Desktop con estado de carga */}
+      {/* Opción A: Botón directo para Android / Chrome / Desktop */}
       {!isIOS && (
         <button
           onClick={handleInstallClick}
@@ -173,7 +195,7 @@ export default function InstallPWA() {
         </button>
       )}
 
-      {/* Opción B: Instructivo especial para iPhone (iOS) */}
+      {/* Opción B: Instructivo para iPhone (iOS) */}
       {isIOS && (
         <div className="bg-white border border-navy-100 rounded-2xl p-4 shadow-card">
           <button
