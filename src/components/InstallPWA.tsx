@@ -51,6 +51,7 @@ export default function InstallPWA() {
   const [isIOS, setIsIOS] = useState(false);
   const [isStandalone, setIsStandalone] = useState(false);
   const [showIOSGuide, setShowIOSGuide] = useState(false);
+  const [isInstalling, setIsInstalling] = useState(false); // Estado para la animación de carga
 
   useEffect(() => {
     // 1. Verificar si la app ya está instalada o abierta en modo standalone
@@ -103,38 +104,35 @@ export default function InstallPWA() {
     };
   }, []);
 
-  // Función para activar la instalación en Android / Desktop
+  // Función para activar la instalación en Android / Desktop con estado de carga
   const handleInstallClick = async () => {
-    // 1. Enviar el evento a GA4 siempre que se haga clic
     sendGA4Event('pwa_install_click', {
       platform: isIOS ? 'ios' : 'android'
     });
 
     const activePrompt = deferredPrompt || window.deferredPwaPrompt;
 
-    // 2. Verificar si tenemos guardado el evento nativo del navegador
     if (!activePrompt) {
       console.warn('El evento deferredPrompt no está disponible en este navegador/sesión.');
       return;
     }
 
     try {
-      // 3. Mostrar el prompt nativo de instalación
+      setIsInstalling(true); // Activa el efecto visual de carga
       await activePrompt.prompt();
 
-      // 4. Esperar a que el usuario responda
       const choiceResult = await activePrompt.userChoice;
       
-      // 5. Enviar la decisión del usuario a GA4
       sendGA4Event('pwa_install_choice', {
-        outcome: choiceResult.outcome // 'accepted' o 'dismissed'
+        outcome: choiceResult.outcome 
       });
 
-      // 6. Limpiar referencias
       setDeferredPrompt(null);
       window.deferredPwaPrompt = null;
     } catch (err) {
       console.error('Error al ejecutar el prompt de instalación:', err);
+    } finally {
+      setIsInstalling(false); // Restaura el botón al terminar
     }
   };
 
@@ -154,14 +152,24 @@ export default function InstallPWA() {
 
   return (
     <div className="w-full max-w-md mx-auto my-4 px-4">
-      {/* Opción A: Botón directo para Android / Chrome / Desktop */}
+      {/* Opción A: Botón directo para Android / Chrome / Desktop con estado de carga */}
       {!isIOS && (
         <button
           onClick={handleInstallClick}
-          className="w-full bg-navy-500 hover:bg-navy-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2 border border-gold-400"
+          disabled={isInstalling}
+          className="w-full bg-navy-500 hover:bg-navy-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition flex items-center justify-center gap-2 border border-gold-400 disabled:opacity-70"
         >
-          <span className="text-xl">📱</span>
-          <span>Instalar App en tu Celular</span>
+          {isInstalling ? (
+            <>
+              <span className="animate-spin text-lg">⏳</span>
+              <span>Preparando instalación...</span>
+            </>
+          ) : (
+            <>
+              <span className="text-xl">📱</span>
+              <span>Instalar App en tu Celular</span>
+            </>
+          )}
         </button>
       )}
 
